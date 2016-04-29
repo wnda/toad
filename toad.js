@@ -61,11 +61,14 @@
       }
     }
     
-    var i=config.images.length,
+    var a=[],
+        i=config.images.length,
         j=0;
+    
+    a.push(config.images);
         
     for(;i>j;j++){
-      getImage(config.images[j],j);
+      getImage(a[j],j);
     }
   }
   
