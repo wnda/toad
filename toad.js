@@ -1,7 +1,7 @@
 (function(){
   function toad(config){
     
-    function addCSSRule(m,n) {
+    function addCSSRule(m) {
       
       var r=document.querySelectorAll(config.selector),
           v=r.length,
@@ -26,12 +26,12 @@
       }
     }
     
-    function getImage(m,n){
+    function getImage(m){
       if(window.fetch){
         fetch(m)
         .then(function(response){
           if (response.ok){
-            addCSSRule(m,n);
+            addCSSRule(m);
           }
           else{
             console.error("Error: "+response.message);
@@ -69,7 +69,7 @@
     a.push(b);
     
     for(;i>j;j++){
-      getImage(a[j],j);
+      getImage(a[j]);
     }
   }
   
