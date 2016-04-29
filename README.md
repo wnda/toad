@@ -12,7 +12,13 @@ this works by trying to fetch the resources using fetch(), or where there is no 
 
 api
 ------
+
+initialise the function with the config object, specifying the selector and the image to associate with it.
+
+the selector is passed to `querySelectorAll`, and the `images` property is pushed into an array, enabling you to target one element or several that share the same class but need different background-images.
+
     toad({
-        "selector":"",
-        "images":[""]
+        "selector" : ".product-grid", //if you have multiple images, this selector should occur as many times as you have images in the array below
+        
+        "images" : ["http://someurl.com/someimage.jpg", "http://someurl.com/anotherimage.jpg", "http://someurl.com/you_get_the_idea.jpg"]
     });
