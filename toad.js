@@ -1,25 +1,31 @@
 (function(){
-  function toad(a){
-    var i=a.length,
-        j=0;
+  function toad(config){
+    
     function addCSSRule(m,n) {
-      var s=document.styleSheets[0];
-      console.log(m,n);
-    	if("insertRule" in s) {
-    		s.insertRule("article:nth-child("+(n+1)+"):before{background-image:url("+m+")}",(s.rules.length));
-    	}
-    	else if("addRule" in s) {
-    		s.addRule("article:nth-child("+(n+1)+"):before","background-image:url("+m+")",(s.rules.length));
-    	}
-    	else{
-    	  var cssImages = document.createElement("style"),
-        styles="article:nth-child("+(n+1)+"):before{background-image:url("+m+")}";
-        cssImages.type = "text/css";
-        cssImages.setAttribute("scoped",true);
-        cssImages.styleSheet?cssImages.styleSheet.cssText=styles:cssImages.appendChild(document.createTextNode(styles));
-        document.head?document.head.appendChild(cssImages):document.getElementsByTagName("head")[0].appendChild(cssImages);
-    	}
+      
+      var r=document.querySelectorAll(config.selector),
+          v=r.length,
+          w=0,
+          s=document.styleSheets[0];
+          
+      for(;v>w;w++){
+      	if("insertRule" in s){
+      		s.insertRule(v[w]+"{background-image:url("+m+")}",(s.rules.length));
+      	}
+      	else if("addRule" in s){
+      		s.addRule(v[w],"background-image:url("+m+")",(s.rules.length));
+      	}
+      	else{
+      	  var cssImages = document.createElement("style"),
+          styles=v[w]+"{background-image:url("+m+")}";
+          cssImages.type="text/css";
+          cssImages.setAttribute("scoped",true);
+          cssImages.styleSheet?cssImages.styleSheet.cssText=styles:cssImages.appendChild(document.createTextNode(styles));
+          document.head?document.head.appendChild(cssImages):document.getElementsByTagName("head")[0].appendChild(cssImages);
+      	}
+      }
     }
+    
     function getImage(m,n){
       if(window.fetch){
         fetch(m)
@@ -37,7 +43,7 @@
       }
       else{
         var xhr=new XMLHttpRequest();
-        xhr.open("GET", image, true);
+        xhr.open("GET",m,true);
         xhr.onload=function(e){
           if (xhr.readyState===4){
             if (xhr.status===(200||304)){
@@ -54,9 +60,14 @@
         xhr.send(null);
       }
     }
+    
+    var i=config.images.length,
+        j=0;
+        
     for(;i>j;j++){
-      getImage(a[j],j);
+      getImage(config.images[j],j);
     }
   }
+  
   window.toad=toad;
 }());
