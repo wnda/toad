@@ -18,12 +18,12 @@ initialise the function with the config object, specifying the selector and the 
 the selector is passed to `querySelectorAll`, so there's no need to send this as an array. and the `images` property is pushed into an array, enabling you to target one element or several that share the same class but need different background-images.
 
     toad({
-        "selector"  :  ".product-grid",
-        "images"    :  "http://someurl.com/someimage.jpg,http://someurl.com/anotherimage.jpg,http://someurl.com/you_get_the_idea.jpg"
+        selector    :  ".product-grid",
+        images      :  "http://someurl.com/someimage.jpg, http://someurl.com/anotherimage.jpg, http://someurl.com/you_get_the_idea.jpg"
         
         OR
         
-        "images"    :   [
+        images      :   [
                         "http://someurl.com/someimage.jpg",
                         "http://someurl.com/anotherimage.jpg",
                         "http://someurl.com/you_get_the_idea.jpg"
