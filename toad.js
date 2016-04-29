@@ -61,11 +61,9 @@
       }
     }
     
-    var a=[],
-        i=config.images.length,
+    var a=config.images.split(","),
+        i=a.length,
         j=0;
-    
-    a.push(config.images);
         
     for(;i>j;j++){
       getImage(a[j],j);
