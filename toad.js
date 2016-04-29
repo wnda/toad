@@ -1,6 +1,6 @@
-  !function(){
-    var a=["https://picuse.agency/1.jpg","https://picuse.agency/2.jpg","https://picuse.agency/3.jpg","https://picuse.agency/4.jpg","https://picuse.agency/5.jpg"],
-        i=a.length,
+(function(){
+  function toad(a){
+    var i=a.length,
         j=0;
     function addCSSRule(m,n) {
       var s=document.styleSheets[0];
@@ -57,4 +57,6 @@
     for(;i>j;j++){
       getImage(a[j],j);
     }
-  }();
+  }
+  window.toad=toad;
+}());
