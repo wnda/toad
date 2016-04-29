@@ -61,10 +61,13 @@
       }
     }
     
-    var a=config.images.split(","),
+    var a=[],
+        b=(typeof config.images === "string" ? config.images.split(",") : config.images),
         i=a.length,
         j=0;
-        
+    
+    a.push(b);
+    
     for(;i>j;j++){
       getImage(a[j],j);
     }
