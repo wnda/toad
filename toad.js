@@ -16,7 +16,7 @@
       		s.addRule(v[w],"background-image:url("+m+")",(s.rules.length));
       	}
       	else{
-      	  var cssImages = document.createElement("style"),
+      	  var cssImages=document.createElement("style"),
           styles=v[w]+"{background-image:url("+m+")}";
           cssImages.type="text/css";
           cssImages.setAttribute("scoped",true);
@@ -47,7 +47,7 @@
         xhr.onload=function(e){
           if (xhr.readyState===4){
             if (xhr.status===(200||304)){
-              addCSSRule(m,n);
+              addCSSRule(m);
             }
             else{
               console.error(xhr.statusText);
@@ -74,4 +74,5 @@
   }
   
   window.toad=toad;
+  
 }());
