@@ -15,10 +15,21 @@ api
 
 initialise the function with the config object, specifying the selector and the image to associate with it.
 
-the selector is passed to `querySelectorAll`, and the `images` property is pushed into an array, enabling you to target one element or several that share the same class but need different background-images.
+the selector is passed to `querySelectorAll`, so there's no need to send this as an array. and the `images` property is pushed into an array, enabling you to target one element or several that share the same class but need different background-images.
 
     toad({
-        "selector" : ".product-grid", //if you have multiple images, this selector should occur as many times as you have images in the array below
+        "selector"  :  ".product-grid",
+        "images"    :  "http://someurl.com/someimage.jpg,http://someurl.com/anotherimage.jpg,http://someurl.com/you_get_the_idea.jpg"
         
-        "images" : ["http://someurl.com/someimage.jpg", "http://someurl.com/anotherimage.jpg", "http://someurl.com/you_get_the_idea.jpg"]
+        OR
+        
+        "images"    :   [
+                        "http://someurl.com/someimage.jpg",
+                        "http://someurl.com/anotherimage.jpg",
+                        "http://someurl.com/you_get_the_idea.jpg"
+                        ]
     });
+    
+you can supply the image URLs in an array or as a comma-delimited list in a single string for simplicity. the lib will detect which you do.
+
+if you have multiple images to apply to separate elements, this selector should occur as many times as you have images in the array below.
