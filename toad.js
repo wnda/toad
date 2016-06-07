@@ -1,10 +1,10 @@
-(function(){
+;(function(){
 
   var settings;
 
   window.toad = {
 
-    isInViewport : function(element){
+    isInViewport : function (element){
 
       if( !element || 1 !== element.nodeType ){
         return false;
@@ -22,34 +22,38 @@
 
     },
 
-    addCSSRule : function(m){
+    addCSSRule : function (imageUrl){
 
-      var v=document.querySelectorAll(config.selector),
-          r=v.length,
-          w=0,
-          s=document.styleSheets[0];
+      var targetEl = document.querySelectorAll( config.selector ),
+          v        = targetEl.length,
+          w        = 0,
+          s        = document.styleSheets[0];
 
-      for (; r > w ; w++)
+      for ( ; v > w; w++)
       {
 
-        if ( isInViewport( v[w] ) )
+        if ( !!isInViewport(targetEl[w]) )
         {
 
-        	if ("insertRule" in s)
+        	if ( "insertRule" in s )
         	{
-        		s.insertRule(v[w]+"{background-image:url("+m+")}",(s.rules.length));
+        		s.insertRule( targetEl[w] + "{background-image:url(" + imageUrl + ")}", ( s.rules.length ) );
         	}
-        	else if ("addRule" in s)
+        	else if ( "addRule" in s )
         	{
-        		s.addRule(v[w],"background-image:url("+m+")",(s.rules.length));
+        		s.addRule( targetEl[w], "background-image:url(" + imageUrl + ")", ( s.rules.length ) );
         	}
         	else
         	{
-        	  var cssImages=document.createElement("style"),
-            styles=v[w]+"{background-image:url("+m+")}";
-            cssImages.type="text/css";
-            cssImages.styleSheet?cssImages.styleSheet.cssText=styles:cssImages.appendChild(document.createTextNode(styles));
-            document.head?document.head.appendChild(cssImages):document.getElementsByTagName("head")[0].appendChild(cssImages);
+        	  var cssImages = document.createElement( "style" ),
+            styles = targetEl[w] + "{background-image:url(" + imageUrl + ")}";
+            cssImages.type = "text/css";
+            cssImages.styleSheet ? 
+              cssImages.styleSheet.cssText = styles 
+              : cssImages.appendChild( document.createTextNode( styles ) );
+            document.head ?
+              document.head.appendChild( cssImages ) 
+              : document.getElementsByTagName( "head" )[0].appendChild( cssImages );
         	}
 
         }
@@ -58,22 +62,22 @@
 
     },
 
-    applyBgImg : function(){
+    applyBgImg : function (){
 
-      var i=settings.images.length,
-          j=0;
+      var i = settings.images.length,
+          j = 0;
 
-      for(;i>j;j++)
+      for( ; i > j; j++)
       {
 
-        if(window.addEventListener)
+        if( window.addEventListener )
         {
             document.addEventListener( "DOMContentLoaded", addCSSRule( i[j], e ), false );
             window.addEventListener( "load", addCSSRule( i[j], e ), false );
             window.addEventListener( "scroll", addCSSRule( i[j], e ), false );
             window.addEventListener( "resize", addCSSRule( i[j], e ), false );
         }
-        else if(window.attachEvent)
+        else if( window.attachEvent )
         {
             document.attachEvent( "onDOMContentLoaded", addCSSRule( i[j], e ) );
             window.attachEvent( "onload", addCSSRule( i[j], e ) );
@@ -97,10 +101,10 @@
 
         selector : config && config.selector ? config.selector : ".toad",
         images   : config && config.images ?
-                   (typeof config.images === "string" ?
-                     config.images.split(",")
-                     : config.images)
-                   : []
+                     (typeof config.images === "string" ?
+                       config.images.split(",")
+                       : config.images)
+                     : []
 
       };
 
