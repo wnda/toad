@@ -34,12 +34,12 @@
         {
           if ( !!settings.bgImg )
           {
-            elements[j].style.backgroundImage = elements[j].getAttribute( "data-src" );
+            elements[j].style.backgroundImage = "url(" + decodeURIComponent( elements[j].getAttribute( "data-src" ) ) + ");";
             elements[j].removeAttribute( "data-src" );
           }
           else
           {
-            elements[j].src = elements[j].getAttribute( "data-src" );
+            elements[j].src = decodeURIComponent( elements[j].getAttribute( "data-src" ) );
             elements[j].removeAttribute( "data-src" );
           }
         }
