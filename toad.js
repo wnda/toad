@@ -3,6 +3,18 @@
   var settings;
   
   window.toad = {
+          
+    isInArray : function ( arr, i, item )
+    {
+      while ( i-- )
+      {
+        if ( item === arr[i] )
+        {
+          return true;
+        }
+      }
+      return false;
+    },
   
     isInViewport : function ( element )
     {
@@ -32,11 +44,14 @@
       {
         if ( !!elements[j].getAttribute( "data-src" ) && !!toad.isInViewport( elements[j] ) )
         {
-          if ( !!settings.bgImg && !elements[j].hasAttribute( "style" ) )
+          var styles = element[j].style.split(":"),
+              k = styles.length;
+          
+          if      ( !!settings.bgImg && !elements[j].hasAttribute( "style" ) && !isInArray(styles, k, "background" ) )
           {
             elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
           }
-          else if ( !settings.bgImg && !elements[j].hasAttribute( "style" ) )
+          else if ( !settings.bgImg  && !elements[j].hasAttribute( "style" ) && !isInArray(styles, k, "background" ) )
           {
             elements[j].src = elements[j].getAttribute( "data-src" );
           }
