@@ -1,4 +1,5 @@
-;(function(){
+;( function ()
+{
     
   var settings;
   
@@ -109,4 +110,5 @@
 
   };
   
-}());
+}
+() );
