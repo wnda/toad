@@ -48,7 +48,10 @@
     init : function (config)
     {
       settings = {
-        bgImg : config && config.bgImg && "boolean" === typeof config.bgImg ? config.bgImg : false 
+        bgImg : config 
+                && config.bgImg 
+                && "boolean" === typeof config.bgImg ? 
+                  config.bgImg : false 
       };
       
       if ( window.addEventListener )
