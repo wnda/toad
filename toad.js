@@ -49,10 +49,9 @@
           if ( elements[j].hasAttribute( "style" ) )
           {
             var styles = elements[j].getAttribute("style").split(":"),
-                k      = styles.length,
-                bg     = ["background-image","background"];
+                k      = styles.length;
                 
-            if ( !toad.isInArray( styles, k, bg ) )
+            if ( !toad.isInArray( styles, k, "background-image" ) )
             {
               if ( !!toad.isImg( elements[j] ) )
               {
