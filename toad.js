@@ -55,14 +55,7 @@
             {
               if ( !!toad.isImg( elements[j] ) )
               {
-                if ( elements[j].src === elements[j].getAttribute( "data-src" ) )
-                {
-                  elements[j].removeAttribute( "data-src" );
-                }
-                else 
-                {
-                  elements[j].src = elements[j].getAttribute( "data-src" );
-                }
+                elements[j].src = elements[j].getAttribute( "data-src" );
               }
               else
               {
