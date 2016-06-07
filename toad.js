@@ -52,14 +52,7 @@
             {
               if ( !!toad.isImg( elements[j] ) )
               {
-                if ( !elements[j].src || elements[j].src !== elements[j].getAttribute( "data-src" ) )
-                {
-                  elements[j].src = elements[j].getAttribute( "data-src" );
-                }
-                else 
-                {
-                  elements[j].removeAttribute( "data-src" );
-                }
+                elements[j].src = elements[j].getAttribute( "data-src" );
               }
               else
               {
@@ -75,7 +68,15 @@
           {
             if ( !!toad.isImg( elements[j] ) )
             {
-              elements[j].src = elements[j].getAttribute( "data-src" );
+              if ( elements[j].getAttribute( "data-src" ) !== elements[j].src  )
+              {
+                elements[j].src = elements[j].getAttribute( "data-src" );  
+              }
+              else
+              {
+                elements[j].removeAttribute( "data-src" );
+              }
+              
             }
             else
             {
