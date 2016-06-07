@@ -3,6 +3,15 @@
   var settings;
   
   window.toad = {
+      
+    isImg : function ( el )
+    {
+      if ( "img" === el.tagName )
+      {
+        return true;
+      }
+      return false;
+    },
           
     isInArray : function ( arr, i, item )
     {
@@ -53,13 +62,13 @@
               
           if ( !elements[j].hasAttribute( "style" ) || !toad.isInArray(styles, k, "background" )
           {
-            if ( !!settings.bgImg ) 
+            if ( !!toad.isImg( elements[j] ) ) 
             {
-              elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
+              elements[j].src = elements[j].getAttribute( "data-src" );
             }
             else
             {
-              elements[j].src = elements[j].getAttribute( "data-src" );
+              elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
             }
           }
           else
@@ -72,10 +81,7 @@
     
     init : function (config)
     {
-      settings = {
-        bgImg : config && config.bgImg && "boolean" === typeof config.bgImg ? config.bgImg : false 
-      };
-      
+        
       if ( window.addEventListener )
       {
           document .addEventListener( "DOMContentLoaded", toad.load, false );
