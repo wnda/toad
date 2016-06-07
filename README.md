@@ -2,23 +2,25 @@ toad.js
 =======
 load images based on viewport visibility
 
-67 sloc
+91 sloc
 
-can be used for images and CSS background images
+this script will pick up anything with an image specified in a `data-src` attribute, detect whether it's an `img` element or any other kind of element, and lazyload the image and apply it when the element is visible in the viewport.
+
+## the rules
+
+- don't supply images with `src` attributes; supply `data-src` attributes instead.
+
+- anything with a `style` attribute specifying a `background` or `background-image` will be **ignored**.
+
 
 ## use
-
-don't supply images with `src` attributes; supply `data-src` attributes instead.
 
 include toad.js
 
 call `toad.init();`
 
-optionally call 
-
-    toad.init({
-        bgImg : // boolean, true = load images as background images, so use false or no config object for img src 
-    });
+that's it.
 
 
-using with images will work with old IE thanks to `getElementsByTagName`, as the CSS background-image setting requires `querySelectorAll`
+## IE support
+IE8 due to querySelectorAll.
