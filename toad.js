@@ -1,5 +1,5 @@
 ;(function(){
-        
+    
   var settings;
   
   window.toad = {
@@ -44,14 +44,18 @@
       {
         if ( !!elements[j].getAttribute( "data-src" ) && !!toad.isInViewport( elements[j] ) )
         {
-          var styles = element[j].style.split(":"),
-              k = styles.length;
-          
-          if      ( !!settings.bgImg && !elements[j].hasAttribute( "style" ) && !toad.isInArray(styles, k, "background" ) )
+
+          if      ( elements[j].hasAttribute( "style" ) )
+          {
+            var styles = elements[j].getAttribute("style").split(":"),
+                k      = styles.length;
+          }
+              
+          if      ( !!settings.bgImg && ( !elements[j].hasAttribute( "style" ) || !toad.isInArray(styles, k, "background" ) ) )
           {
             elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
           }
-          else if ( !settings.bgImg  && !elements[j].hasAttribute( "style" ) && !toad.isInArray(styles, k, "background" ) )
+          else if ( !settings.bgImg  && ( !elements[j].hasAttribute( "style" ) || !toad.isInArray(styles, k, "background" ) ) )
           {
             elements[j].src = elements[j].getAttribute( "data-src" );
           }
