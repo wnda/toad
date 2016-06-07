@@ -30,7 +30,7 @@
   
       for ( ; i > j; j++)
       {
-        if ( !!isInViewport( elements[j] ) )
+        if ( !!toad.isInViewport( elements[j] ) )
         {
           if ( !!settings.bgImg )
           {
