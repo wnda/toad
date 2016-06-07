@@ -11,7 +11,7 @@
         return false;
       }
   
-      var r = l.getBoundingClientRect();
+      var r = element.getBoundingClientRect();
   
       return (
         !!r
