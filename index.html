@@ -55,14 +55,14 @@
                 {
                   elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
                 }
-                else
+                else if ( !settings.bgImg && !elements[j].hasAttribute( "style" ) )
                 {
                   elements[j].src = elements[j].getAttribute( "data-src" );
                 }
-              }
-              else
-              {
-                elements[j].removeAttribute( "data-src" );
+                else
+                {
+                  elements[j].removeAttribute( "data-src" );
+                }
               }
             }
         
