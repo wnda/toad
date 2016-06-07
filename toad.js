@@ -1,26 +1,27 @@
-;( function ()
-{
+;( function (){
     
   var settings;
   
   window.toad = {
       
-    isImg : function ( el )
-    {
+    isImg : function ( el ) {
+        
       if ( "img" === el.tagName ) { return true; }
       
       return false;
+    
     },
           
-    isInArray : function ( arr, i, item )
-    {
+    isInArray : function ( arr, i, item ) {
+        
       while ( i-- ) { if ( item === arr[i] ) { return true; } }
       
       return false;
+    
     },
   
-    isInViewport : function ( element )
-    {
+    isInViewport : function ( element ) {
+
       if ( !element || 1 !== element.nodeType ) { return false; } 
       else {
   
@@ -34,10 +35,11 @@
           && r.left   < ( window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth  )
         );
       }
+
     },
     
-    load : function ()
-    {
+    load : function () {
+
       var elements  = document.querySelectorAll("[data-src]"),
           i         = elements.length,
           j         = 0;
@@ -75,8 +77,7 @@
       
     },
     
-    init : function (config)
-    {
+    init : function (config) {
         
       if ( window.addEventListener )
       {
