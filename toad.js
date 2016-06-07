@@ -46,14 +46,29 @@
       {
         if ( !!elements[j].getAttribute( "data-src" ) && !!toad.isInViewport( elements[j] ) )
         {
-
           if ( elements[j].hasAttribute( "style" ) )
           {
             var styles = elements[j].getAttribute("style").split(":"),
-                k      = styles.length;
+                k      = styles.length,
+                bg     = ["background-image","background"];
+                
+            if ( !toad.isInArray( styles, k, bg ) )
+            {
+              if ( !!toad.isImg( elements[j] ) )
+              {
+                elements[j].src = elements[j].getAttribute( "data-src" );
+              }
+              else
+              {
+                elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
+              }
+            }
+            else
+            {
+              elements[j].removeAttribute( "data-src" );
+            }
           }
-
-          if ( !elements[j].hasAttribute( "style" ) || !toad.isInArray(styles, k, "background" ) )
+          else
           {
             if ( !!toad.isImg( elements[j] ) )
             {
@@ -64,13 +79,7 @@
               elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
             }
           }
-          else
-          {
-            elements[j].removeAttribute( "data-src" );
-          }
-
         }
-
       }
 
     },
