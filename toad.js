@@ -32,6 +32,12 @@
       }
 
     },
+    
+    throttleLoad : function () {
+      
+      requestAnimationFrame(toad.load);
+      
+    },
 
     load : function () {
 
@@ -94,8 +100,8 @@
       {
           document .addEventListener( "DOMContentLoaded", toad.load, false );
           window   .addEventListener( "load",             toad.load, false );
-          window   .addEventListener( "scroll",           toad.load, false );
-          window   .addEventListener( "resize",           toad.load, false );
+          window   .addEventListener( "scroll",           toad.throttleLoad, false );
+          window   .addEventListener( "resize",           toad.throttleLoad, false );
       }
       else if ( window.attachEvent )
       {
