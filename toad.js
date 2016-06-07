@@ -30,15 +30,17 @@
   
       for ( ; i > j; j++)
       {
-        if ( !!toad.isInViewport( elements[j] ) )
+        if ( !!elements[j].getAttribute( "data-src" ) && !!toad.isInViewport( elements[j] ) )
         {
           if ( !!settings.bgImg )
           {
             elements[j].style.backgroundImage = decodeURIComponent( elements[j].getAttribute( "data-src" ) );
+            elements[j].removeAttribute( "data-src" );
           }
           else
           {
             elements[j].src = decodeURIComponent( elements[j].getAttribute( "data-src" ) );
+            elements[j].removeAttribute( "data-src" );
           }
         }
       }
