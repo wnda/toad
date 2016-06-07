@@ -7,41 +7,33 @@
       
     isImg : function ( el )
     {
-      if ( "img" === el.tagName )
-      {
-        return true;
-      }
+      if ( "img" === el.tagName ) { return true; }
+      
       return false;
     },
           
     isInArray : function ( arr, i, item )
     {
-      while ( i-- )
-      {
-        if ( item === arr[i] )
-        {
-          return true;
-        }
-      }
+      while ( i-- ) { if ( item === arr[i] ) { return true; } }
+      
       return false;
     },
   
     isInViewport : function ( element )
     {
-      if ( !element || 1 !== element.nodeType )
-      {
-        return false;
+      if ( !element || 1 !== element.nodeType ) { return false; } 
+      else {
+  
+        var r = element.getBoundingClientRect();
+  
+        return (
+          !!r
+          && r.bottom > 0
+          && r.right  > 0
+          && r.top    < ( window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight )
+          && r.left   < ( window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth  )
+        );
       }
-  
-      var r = element.getBoundingClientRect();
-  
-      return (
-        !!r
-        && r.bottom > 0
-        && r.right  > 0
-        && r.top    < ( window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight )
-        && r.left   < ( window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth  )
-      );
     },
     
     load : function ()
@@ -76,8 +68,11 @@
           {
             elements[j].removeAttribute( "data-src" );
           }
+          
         }
+        
       }
+      
     },
     
     init : function (config)
