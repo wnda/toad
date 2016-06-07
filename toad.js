@@ -3,19 +3,16 @@
   window.toad = {
 
     isImg : function ( element ) {
-
-      if ( ( "IMG" || "img" ) === element.tagName ) { return true; }
-
-      return false;
+      
+      return "IMG" === element.tagName ? true : false;
 
     },
 
     isInArray : function ( arr, i, item ) {
 
       while ( i-- ) { if ( item === arr[i] ) { return true; } }
-
       return false;
-
+      
     },
 
     isInViewport : function ( element ) {
@@ -57,7 +54,8 @@
               {
                 if ( elements[j].src !== elements[j].getAttribute( "data-src" ) )
                 {
-                  elements[j].src = elements[j].getAttribute( "data-src" );
+                  elements[j].src = elements[j].getAttribute( "data-src" ),
+                  elements[j].removeAttribute( "data-src" );
                 }
                 else 
                 {
