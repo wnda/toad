@@ -34,14 +34,12 @@
         {
           if ( !!settings.bgImg )
           {
-            console.log(elements[j].dataset.src);
-            console.log(elements[j].getAttribute( "data-src" ));
-            elements[j].style.backgroundImage = decodeURIComponent( elements[j].dataset.src );
+            elements[j].style.backgroundImage = elements[j].getAttribute( "data-src" );
             elements[j].removeAttribute( "data-src" );
           }
           else
           {
-            elements[j].src = decodeURIComponent( elements[j].dataset.src );
+            elements[j].src = elements[j].getAttribute( "data-src" );
             elements[j].removeAttribute( "data-src" );
           }
         }
