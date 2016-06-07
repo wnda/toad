@@ -53,12 +53,12 @@
               {
                 if ( !!settings.bgImg )
                 {
-                  elements[j].style.backgroundImage = "url(" + decodeURIComponent( elements[j].getAttribute( "data-src" ) ) + ");";
+                  elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
                   elements[j].removeAttribute( "data-src" );
                 }
                 else
                 {
-                  elements[j].src = decodeURIComponent( elements[j].getAttribute( "data-src" ) );
+                  elements[j].src = elements[j].getAttribute( "data-src" );
                   elements[j].removeAttribute( "data-src" );
                 }
               }
@@ -229,6 +229,7 @@
     font-family: Cousine,Consolas,Menlo,Monaco,monospace;
     font-weight: 700
     }
+    .cell{background-size:cover;background-position:center;background-repeat:no-repeat;}
     /*]]>*/-->
 
     </style>
