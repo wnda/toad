@@ -75,6 +75,8 @@
         window.onresize = toad.load;
       }
       
+      toad.load();
+      
     }
 
   };
