@@ -51,7 +51,7 @@
             {
               if ( !!elements[j].getAttribute( "data-src" ) && !!toad.isInViewport( elements[j] ) )
               {
-                if ( !!settings.bgImg && !element[j].hasAttribute( "style" ) )
+                if ( !!settings.bgImg && !elements[j].hasAttribute( "style" ) )
                 {
                   elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
                 }
