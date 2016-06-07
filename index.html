@@ -16,9 +16,15 @@
     if(window.location.host.indexOf("js.org"||"amdouglas.com"||"github.io")>-1&&window.location.protocol!="https:"){window.location.protocol="https";}
     //--><!]]>
     </script>
+    <script src="https://rawgit.com/wnda/toad/master/toad.js"></script>
+    <script>
+    <!--//--><![CDATA[//><!--
+    toad.init({bgImg:true});
+    //--><!]]>
+    </script>
     <script>
     <!--//--><![CDATA[//><!--  
-    function z(results){var i=results.response.posts.length;while(i--){var postContainer=document.getElementById("tumblr"),postItem=document.createElement("article"),postItemContent=document.createElement("a");postItem.className="cell cell-sm-4";postItemContent.className="contents";postItem.setAttribute("data-src",results.response.posts[i].photos[0].alt_sizes[1].url);postItemContent.href=results.response.posts[i].post_url;postItemContent.title="via "+results.response.posts[i].source_title;postItem.appendChild(postItemContent);postContainer.insertBefore(postItem,postContainer.firstChild);}}
+    function z(results){var i=results.response.posts.length;while(i--){var postContainer=document.getElementById("tumblr"),postItem=document.createElement("article"),postItemContent=document.createElement("a");postItem.className="cell cell-sm-4";postItemContent.className="contents";postItem.setAttribute("data-src",results.response.posts[i].photos[0].alt_sizes[1].url);postItemContent.href=results.response.posts[i].post_url;postItemContent.title="via "+results.response.posts[i].source_title;postItem.appendChild(postItemContent);postContainer.insertBefore(postItem,postContainer.firstChild);}toad.load();}
     //--><!]]>
     </script>
     <style>
@@ -150,11 +156,6 @@
   <body>
     <section id="tumblr" class="grid"></section>
     <script src="https://api.tumblr.com/v2/blog/theobscureones.tumblr.com/posts?api_key=F1inWvdXEPkzzXNHZuV8B4MFPmsC9SQWONAkOfc6Jmf69U4H7O&limit=30&callback=z"></script>
-    <script src="https://rawgit.com/wnda/toad/master/toad.js"></script>
-    <script>
-    <!--//--><![CDATA[//><!--
-    toad.init({bgImg:true});
-    //--><!]]>
-    </script>
+    
   </body>
 </html>
