@@ -1,12 +1,13 @@
 ;(function(){
 
-  var settings;
+  function toad ()
+  {
 
-  window.toad = {
+    function isInViewport ( element )
+    {
 
-    isInViewport : function (element){
-
-      if ( !element || 1 !== element.nodeType ){
+      if ( !element || 1 !== element.nodeType )
+      {
         return false;
       }
 
@@ -20,98 +21,43 @@
         && r.left   < ( window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth  )
       );
 
-    },
+    }
 
-    addCSSRule : function (imageUrl){
+    var elements  = document.querySelectorAll("[data-src]"),
+        i         = elements.length,
+        j         = 0;
 
-      var targetEl = document.querySelectorAll( config.selector ),
-          v        = targetEl.length,
-          w        = 0,
-          s        = document.styleSheets[0];
+    for ( ; i > j; j++)
+    {
 
-      for ( ; v > w; w++)
+      if ( !!isInViewport( elements[j] ) )
       {
-
-        if ( !!isInViewport(targetEl[w]) )
-        {
-
-        	if ( "insertRule" in s )
-        	{
-        		s.insertRule( targetEl[w] + "{background-image:url(" + imageUrl + ")}", ( s.rules.length ) );
-        	}
-        	else if ( "addRule" in s )
-        	{
-        		s.addRule( targetEl[w], "background-image:url(" + imageUrl + ")", ( s.rules.length ) );
-        	}
-        	else
-        	{
-        	  var cssImages = document.createElement( "style" ),
-            styles = targetEl[w] + "{background-image:url(" + imageUrl + ")}";
-            cssImages.type = "text/css";
-            cssImages.styleSheet ? 
-              cssImages.styleSheet.cssText = styles 
-              : cssImages.appendChild( document.createTextNode( styles ) );
-            document.head ?
-              document.head.appendChild( cssImages ) 
-              : document.getElementsByTagName( "head" )[0].appendChild( cssImages );
-        	}
-
-        }
-
+        elements[w].style.backgroundImage = decodeURIComponent(elements[w].dataset.src);
       }
-
-    },
-
-    applyBgImg : function (){
-
-      var i = settings.images.length,
-          j = 0;
-
-      for( ; i > j; j++)
-      {
-
-        if( window.addEventListener )
-        {
-            document.addEventListener( "DOMContentLoaded", addCSSRule( i[j], e ), false );
-            window.addEventListener( "load", addCSSRule( i[j], e ), false );
-            window.addEventListener( "scroll", addCSSRule( i[j], e ), false );
-            window.addEventListener( "resize", addCSSRule( i[j], e ), false );
-        }
-        else if( window.attachEvent )
-        {
-            document.attachEvent( "onDOMContentLoaded", addCSSRule( i[j], e ) );
-            window.attachEvent( "onload", addCSSRule( i[j], e ) );
-            window.attachEvent( "onscroll", addCSSRule( i[j], e ) );
-            window.attachEvent( "onresize", addCSSRule( i[j], e ) );
-        }
-        else
-        {
-          window.onload   = addCSSRule( i[j], e);
-          window.onscroll = addCSSRule( i[j], e);
-          window.onresize = addCSSRule( i[j], e);
-        }
-
-      }
-
-    },
-
-    init : function(config){
-
-      settings = {
-
-        selector : config && config.selector ? config.selector : ".toad",
-        images   : config && config.images ?
-                     (typeof config.images === "string" ?
-                       config.images.split(",")
-                       : config.images)
-                     : []
-
-      };
-
-      applyBgImg();
 
     }
 
-  };
+  }
+  
+  if ( window.addEventListener )
+  {
+      document.addEventListener( "DOMContentLoaded", toad, false );
+      window.addEventListener( "load", toad, false );
+      window.addEventListener( "scroll", toad, false );
+      window.addEventListener( "resize", toad, false );
+  }
+  else if ( window.attachEvent )
+  {
+      document.attachEvent( "onDOMContentLoaded", toad );
+      window.attachEvent( "onload", toad );
+      window.attachEvent( "onscroll", toad );
+      window.attachEvent( "onresize", toad );
+  }
+  else
+  {
+    window.onload   = toad;
+    window.onscroll = toad;
+    window.onresize = toad;
+  }
 
 }());
