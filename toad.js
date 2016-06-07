@@ -2,9 +2,9 @@
 
   window.toad = {
 
-    isImg : function ( el ) {
+    isImg : function ( element ) {
 
-      if ( "img" === el.tagName ) { return true; }
+      if ( ( "IMG" || "img" ) === element.tagName ) { return true; }
 
       return false;
 
