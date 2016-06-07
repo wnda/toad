@@ -1,18 +1,18 @@
 ;(function(){
-
-  function toad ()
-  {
-
-    function isInViewport ( element )
+  
+  var settings;
+  
+  window.toad = {
+  
+    isInViewport : function ( element )
     {
-
       if ( !element || 1 !== element.nodeType )
       {
         return false;
       }
-
+  
       var r = l.getBoundingClientRect();
-
+  
       return (
         !!r
         && r.bottom > 0
@@ -20,44 +20,60 @@
         && r.top    < ( window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight )
         && r.left   < ( window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth  )
       );
-
-    }
-
-    var elements  = document.querySelectorAll("[data-src]"),
-        i         = elements.length,
-        j         = 0;
-
-    for ( ; i > j; j++)
+    },
+    
+    load : function ()
     {
-
-      if ( !!isInViewport( elements[j] ) )
+      var elements  = document.querySelectorAll("[data-src]"),
+          i         = elements.length,
+          j         = 0;
+  
+      for ( ; i > j; j++)
       {
-        elements[w].style.backgroundImage = decodeURIComponent(elements[w].dataset.src);
+        if ( !!isInViewport( elements[j] ) )
+        {
+          if ( !!settings.bgImg )
+          {
+            elements[j].style.backgroundImage = decodeURIComponent( elements[j].getAttribute( "data-src" ) );
+          }
+          else
+          {
+            elements[j].src = decodeURIComponent( elements[j].getAttribute( "data-src" ) );
+          }
+        }
       }
-
+  
+    },
+    
+    init : function (config)
+    {
+      settings = {
+        bgImg : config && config.bgImg && "boolean" === typeof config.bgImg ? config.bgImg : false 
+      };
+      
+      if ( window.addEventListener )
+      {
+          document .addEventListener( "DOMContentLoaded", toad.load, false );
+          window   .addEventListener( "load",             toad.load, false );
+          window   .addEventListener( "scroll",           toad.load, false );
+          window   .addEventListener( "resize",           toad.load, false );
+      }
+      else if ( window.attachEvent )
+      {
+          document .attachEvent( "onDOMContentLoaded", toad.load );
+          window   .attachEvent( "onload",             toad.load );
+          window   .attachEvent( "onscroll",           toad.load );
+          window   .attachEvent( "onresize",           toad.load );
+      }
+      else
+      {
+        window.onload   = toad.load;
+        window.onscroll = toad.load;
+        window.onresize = toad.load;
+      }
+      
     }
 
-  }
+  };
   
-  if ( window.addEventListener )
-  {
-      document.addEventListener( "DOMContentLoaded", toad, false );
-      window.addEventListener( "load", toad, false );
-      window.addEventListener( "scroll", toad, false );
-      window.addEventListener( "resize", toad, false );
-  }
-  else if ( window.attachEvent )
-  {
-      document.attachEvent( "onDOMContentLoaded", toad );
-      window.attachEvent( "onload", toad );
-      window.attachEvent( "onscroll", toad );
-      window.attachEvent( "onresize", toad );
-  }
-  else
-  {
-    window.onload   = toad;
-    window.onscroll = toad;
-    window.onresize = toad;
-  }
-
 }());
