@@ -6,7 +6,7 @@
 
     isInViewport : function (element){
 
-      if( !element || 1 !== element.nodeType ){
+      if ( !element || 1 !== element.nodeType ){
         return false;
       }
 
