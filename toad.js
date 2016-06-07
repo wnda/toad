@@ -45,7 +45,7 @@
     
     load : function ()
     {
-      var elements  = !settings.bgImg ? document.getElementsByTagName("img") : document.querySelectorAll("[data-src]"),
+      var elements  = document.querySelectorAll("[data-src]"),
           i         = elements.length,
           j         = 0;
   
