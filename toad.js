@@ -45,19 +45,22 @@
         if ( !!elements[j].getAttribute( "data-src" ) && !!toad.isInViewport( elements[j] ) )
         {
 
-          if      ( elements[j].hasAttribute( "style" ) )
+          if ( elements[j].hasAttribute( "style" ) )
           {
             var styles = elements[j].getAttribute("style").split(":"),
                 k      = styles.length;
           }
               
-          if      ( !!settings.bgImg && ( !elements[j].hasAttribute( "style" ) || !toad.isInArray(styles, k, "background" ) ) )
+          if ( !elements[j].hasAttribute( "style" ) || !toad.isInArray(styles, k, "background" )
           {
-            elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
-          }
-          else if ( !settings.bgImg  && ( !elements[j].hasAttribute( "style" ) || !toad.isInArray(styles, k, "background" ) ) )
-          {
-            elements[j].src = elements[j].getAttribute( "data-src" );
+            if ( !!settings.bgImg ) 
+            {
+              elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
+            }
+            else
+            {
+              elements[j].src = elements[j].getAttribute( "data-src" );
+            }
           }
           else
           {
@@ -65,7 +68,6 @@
           }
         }
       }
-  
     },
     
     init : function (config)
