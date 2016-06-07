@@ -18,7 +18,7 @@
     </script>
     <script>
     <!--//--><![CDATA[//><!--  
-    function z(results){var i=results.response.posts.length;while(i--){var postContainer=document.getElementById("tumblr"),postItem=document.createElement("article"),postItemContent=document.createElement("a");postItem.className="cell cell-sm-4";postItemContent.className="contents";postItemContent.setAttribute("data-src",results.response.posts[i].photos[0].alt_sizes[1].url);postItemContent.href=results.response.posts[i].post_url;postItemContent.title="via "+results.response.posts[i].source_title;postItem.appendChild(postItemContent);postContainer.insertBefore(postItem,postContainer.firstChild);postItem.style.backgroundImage="none";}}
+    function z(results){var i=results.response.posts.length;while(i--){var postContainer=document.getElementById("tumblr"),postItem=document.createElement("article"),postItemContent=document.createElement("a");postItem.className="cell cell-sm-4";postItemContent.className="contents";postItem.setAttribute("data-src",results.response.posts[i].photos[0].alt_sizes[1].url);postItemContent.href=results.response.posts[i].post_url;postItemContent.title="via "+results.response.posts[i].source_title;postItem.appendChild(postItemContent);postContainer.insertBefore(postItem,postContainer.firstChild);}}
     //--><!]]>
     </script>
     <style>
