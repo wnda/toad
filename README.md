@@ -22,9 +22,11 @@ finally, no matter what lazysizes does or does not do, it uses regular expressio
 
 ## use
 
-include toad.js
+1. include images, setting `data-src="{{image_url}}"`
 
-call `toad.init();`
+2. include toad.js. bottom of the `body` element.
+
+3. below the script include, call `toad.init();`
 
 and that's it. everything else is magic.
 
