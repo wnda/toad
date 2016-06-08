@@ -32,4 +32,4 @@ and that's it. everything else is magic.
 
 
 ## IE support
-IE8 due to querySelectorAll.
+IE8 due to querySelectorAll. which you *could* polyfill but I don't see why you would bother. even I'm beginning to think about targeting IE10+ in the future, and I hate excluding old-IE users because I'm used to e-commerce.
