@@ -1,5 +1,8 @@
 ;( function ()
 {
+  
+  "use strict";
+  
   window.toad = 
   {
     isImg : function ( element )
@@ -119,4 +122,5 @@
     }
     
   };
+  // toad.init(); to call immediately
 } ) ();
