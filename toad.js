@@ -6,11 +6,13 @@
     {
       return "IMG" === element.tagName ? true : false;
     },
+    
     isInArray : function ( arr, i, item )
     {
       while ( i-- ) { if ( item === arr[i] ) { return true; } }
       return false;
     },
+    
     isInViewport : function ( element )
     {
       if ( !element || 1 !== element.nodeType ) { return false; }
@@ -26,6 +28,7 @@
         );
       }
     },
+    
     debounce : function ( func, wait, scope )
     {
       var timeout;
@@ -39,6 +42,7 @@
         timeout = setTimeout( later, wait );
       };
     },
+    
     load : function () 
     {
       var elements  = document.querySelectorAll( "[data-src]" ),
@@ -90,18 +94,17 @@
         }
       }
     },
+    
     init : function () 
     {
       if ( "addEventListener" in window )
       {
-          document .addEventListener( "DOMContentLoaded", toad.load, false );
           window   .addEventListener( "load",             toad.load, false );
           window   .addEventListener( "scroll",           toad.debounce( toad.load, 100, this ), false );
           window   .addEventListener( "resize",           toad.debounce( toad.load, 100, this ), false );
       }
       else if ( "attachEvent" in window )
       {
-          document .attachEvent( "onDOMContentLoaded", toad.load );
           window   .attachEvent( "onload",             toad.load );
           window   .attachEvent( "onscroll",           toad.debounce( toad.load, 100, this ) );
           window   .attachEvent( "onresize",           toad.debounce( toad.load, 100, this ) );
@@ -114,5 +117,6 @@
       }
       toad.load();
     }
+    
   };
 } ) ();
