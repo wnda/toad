@@ -1,27 +1,22 @@
 ;( function () {
 
-  window.toad = {
-
-    isImg : function ( element ) {
-      
+  window.toad = 
+  {
+    isImg : function (element)
+    {
       return "IMG" === element.tagName ? true : false;
-
     },
-
-    isInArray : function ( arr, i, item ) {
-
+    isInArray : function (arr, i, item) 
+    {
       while ( i-- ) { if ( item === arr[i] ) { return true; } }
       return false;
-      
     },
-
-    isInViewport : function ( element ) {
-
+    isInViewport : function (element)
+    {
       if ( !element || 1 !== element.nodeType ) { return false; }
-      else {
-
+      else 
+      {
         var r = element.getBoundingClientRect();
-
         return (
           !!r
           && r.bottom > 0
@@ -30,35 +25,25 @@
           && r.left   < ( window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth  )
         );
       }
-
     },
-    
-    debounce : function (func, wait, scope) {
+    debounce : function (func, wait, scope)
+    {
       var timeout;
-      
       return function () {
-      
         var context = scope || this, args = arguments;
-      
         var later = function () {
           timeout = null;
           func.apply(context, args);
         };
-      
         clearTimeout(timeout);
-      
         timeout = setTimeout(later, wait);
-        
       };
-      
     },
-
-    load : function () {
-
+    load : function () 
+    {
       var elements  = document.querySelectorAll("[data-src]"),
           i         = elements.length,
           j         = 0;
-
       for ( ; i > j; j++)
       {
         if ( !!elements[j].getAttribute( "data-src" ) && !!toad.isInViewport( elements[j] ) )
@@ -104,19 +89,17 @@
           }
         }
       }
-
     },
-
-    init : function (config) {
-
-      if ( window.addEventListener )
+    init : function () 
+    {
+      if ( "addEventListener" in window )
       {
           document .addEventListener( "DOMContentLoaded", toad.load, false );
           window   .addEventListener( "load",             toad.load, false );
           window   .addEventListener( "scroll",           toad.debounce( toad.load, 100, this ), false );
           window   .addEventListener( "resize",           toad.debounce( toad.load, 100, this ), false );
       }
-      else if ( window.attachEvent )
+      else if ( "attachEvent" in window )
       {
           document .attachEvent( "onDOMContentLoaded", toad.load );
           window   .attachEvent( "onload",             toad.load );
@@ -129,11 +112,7 @@
         window.onscroll = toad.debounce( toad.load, 100, this);
         window.onresize = toad.debounce( toad.load, 100, this);
       }
-
       toad.load();
-
     }
-
   };
-
-} () );
+}());
