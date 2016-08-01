@@ -3,6 +3,26 @@
 
   "use strict";
   
+  // for extreme browser support
+  Document.prototype.getElementsByAttribute 
+  = 
+  Element.prototype.getElementsByAttribute 
+  = 
+  function(attr) 
+  {
+    var nodeList = this.getElementsByTagName( "*" ),
+        i = nodeList.length,
+        j = 0,
+        nodeArray = [];
+        
+    for (; i > j; j++)
+    {
+      !!nodeList[j].getAttribute( attr ) && nodeArray.push( nodeList[j] );
+    }
+    
+    return nodeArray;
+  };
+  
   window.toad = 
   { // lets define some helpers
     isImg : function ( element )
@@ -54,7 +74,7 @@
     
     load : function () 
     { // get everything with data-src attribute
-      var elements  = document.querySelectorAll( "[data-src]" ),
+      var elements  = document.querySelectorAll( "[data-src]" ) || document.getElementsByAttribute( "data-src" ),
           i         = elements.length,
           j         = 0;
       // iterate
