@@ -2,16 +2,16 @@
 {
   window.toad = 
   {
-    isImg : function (element)
+    isImg : function ( element )
     {
       return "IMG" === element.tagName ? true : false;
     },
-    isInArray : function (arr, i, item) 
+    isInArray : function ( arr, i, item )
     {
       while ( i-- ) { if ( item === arr[i] ) { return true; } }
       return false;
     },
-    isInViewport : function (element)
+    isInViewport : function ( element )
     {
       if ( !element || 1 !== element.nodeType ) { return false; }
       else 
@@ -26,22 +26,22 @@
         );
       }
     },
-    debounce : function (func, wait, scope)
+    debounce : function ( func, wait, scope )
     {
       var timeout;
       return function () {
         var context = scope || this, args = arguments;
         var later = function () {
           timeout = null;
-          func.apply(context, args);
+          func.apply( context, args );
         };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
+        clearTimeout( timeout );
+        timeout = setTimeout( later, wait );
       };
     },
     load : function () 
     {
-      var elements  = document.querySelectorAll("[data-src]"),
+      var elements  = document.querySelectorAll( "[data-src]" ),
           i         = elements.length,
           j         = 0;
       for ( ; i > j; j++)
