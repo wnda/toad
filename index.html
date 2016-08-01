@@ -48,7 +48,139 @@
     <script async="async" src="https://www.google-analytics.com/analytics.js" type="text/javascript"></script>
     <script type="text/javascript">
     <!--//--><![CDATA[//><!--
-    ;(function(){window.toad={isImg:function(a){return"IMG"===a.tagName?!0:!1},isInArray:function(a,c,b){for(;c--;)if(b===a[c])return!0;return!1},isInViewport:function(a){return a&&1===a.nodeType?(a=a.getBoundingClientRect(),!!a&&0<a.bottom&&0<a.right&&a.top<(window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight)&&a.left<(window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth)):!1},throttleLoad:function(){window.requestAnimationFrame||(window.requestAnimationFrame=function(){return window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||function(a){window.setTimeout(a,1E3/60)}}());window.requestAnimationFrame?window.requestAnimationFrame(toad.load):toad.load()},load:function(){for(var a=document.querySelectorAll("[data-src]"),c=a.length,b=0;c>b;b++)if(a[b].getAttribute("data-src")&&toad.isInViewport(a[b]))if(a[b].hasAttribute("style")){var d=a[b].getAttribute("style").split(":");toad.isInArray(d,d.length,"background-image")?a[b].removeAttribute("data-src"):toad.isImg(a[b])?a[b].src=a[b].getAttribute("data-src"):a[b].style.backgroundImage="url("+a[b].getAttribute("data-src")+")"}else toad.isImg(a[b])?a[b].getAttribute("data-src")!==a[b].src?a[b].src=a[b].getAttribute("data-src"):a[b].removeAttribute("data-src"):a[b].style.backgroundImage="url("+a[b].getAttribute("data-src")+")"},init:function(a){window.addEventListener?(document.addEventListener("DOMContentLoaded",toad.load,!1),window.addEventListener("load",toad.load,!1),window.addEventListener("scroll",toad.throttleLoad,!1),window.addEventListener("resize",toad.throttleLoad,!1)):window.attachEvent?(document.attachEvent("onDOMContentLoaded",toad.load),window.attachEvent("onload",toad.load),window.attachEvent("onscroll",toad.load),window.attachEvent("onresize",toad.load)):(window.onload=toad.load,window.onscroll=toad.load,window.onresize=toad.load);toad.load()}}})();
+    ;( function ()
+    { // true warriors always use strict
+    
+      "use strict";
+      
+      window.toad = 
+      { // lets define some helpers
+        isImg : function ( element )
+        {
+          return "IMG" === element.tagName ? true : false;
+        },
+        
+        isInArray : function ( arr, i, item )
+        { // can't use in operator on arrays, so...
+          while ( i-- ) { if ( item === arr[i] ) { return true; } }
+          return false;
+        },
+        
+        isInViewport : function ( element )
+        { // kind of important...
+          if ( !element || 1 !== element.nodeType ) { return false; }
+          else 
+          {
+            var w = ( window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth  ),
+                h = ( window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight ),
+                r = element.getBoundingClientRect();
+            return (
+              !!r
+              && r.bottom > 0
+              && r.right  > 0
+              && r.top    < h
+              && r.left   < w
+            );
+          }
+        },
+        
+        debounce : function ( func, wait, scope )
+        { // requestAnimationFrame isn't supported well enough for my tastes
+          var timeout;
+          
+          return function () 
+          {
+            var context = scope || this, args = arguments,
+                later = function () {
+                  timeout = null;
+                  func.apply( context, args );
+                };
+                
+            clearTimeout( timeout );
+            timeout = setTimeout( later, wait );
+          };
+          
+        },
+        
+        load : function () 
+        { // get everything with data-src attribute
+          var elements  = document.querySelectorAll( "[data-src]" ),
+              i         = elements.length,
+              j         = 0;
+          // iterate
+          for ( ; i > j; j++)
+          { // holy shit
+            if ( !!elements[j].getAttribute( "data-src" ) && !!toad.isInViewport( elements[j] ) )
+            { // has data-src and is in viewport
+              if ( !!elements[j].getAttribute( "style" ) )
+              { // has style attribute set
+                var styles = elements[j].getAttribute("style").split(":"),
+                    k      = styles.length;
+                    
+                if ( !toad.isInArray( styles, k, "background-image" ) )
+                { // has no backgroundImage set
+                  if ( !!toad.isImg( elements[j] ) )
+                  { // is image
+                    elements[j].src = elements[j].getAttribute( "data-src" );
+                  }
+                  else
+                  { // is not image and has no background image set
+                    elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
+                  }
+                }
+                else
+                { // has background-image already set
+                  elements[j].removeAttribute( "data-src" );
+                }
+              }
+              else
+              { // has no style attribute set, but has data-src and is in viewport
+                if ( !!toad.isImg( elements[j] ) )
+                { // is image
+                  if ( elements[j].getAttribute( "data-src" ) !== elements[j].src )
+                  { // src is empty or data-src does not match src attribute
+                    elements[j].src = elements[j].getAttribute( "data-src" );  
+                  }
+                  else
+                  { // data-src and src are same; remove data-src to prevent rechecking
+                    elements[j].removeAttribute( "data-src" );
+                  }
+                }
+                else
+                { // not an image, but is in viewport, has data-src and has no attribute styles
+                  elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
+                }
+              }
+            }
+          }
+        },
+        
+        init : function () 
+        { // setup event listeners
+          if ( "addEventListener" in window )
+          { // add events in IE9+
+            window.addEventListener( "load",   toad.load, false );
+            window.addEventListener( "scroll", toad.debounce( toad.load, 100, this ), false );
+            window.addEventListener( "resize", toad.debounce( toad.load, 100, this ), false );
+          }
+          else if ( "attachEvent" in window )
+          { // add events in IE8
+            window.attachEvent( "onload",   toad.load );
+            window.attachEvent( "onscroll", toad.debounce( toad.load, 100, this ) );
+            window.attachEvent( "onresize", toad.debounce( toad.load, 100, this ) );
+          }
+          else
+          { // add events in ancient browsers
+            window.onload   = toad.load;
+            window.onscroll = toad.debounce( toad.load, 100, this );
+            window.onresize = toad.debounce( toad.load, 100, this );
+          }
+          toad.load();
+        }
+        
+      };
+      // to call immediately, add toad.init() here
+    } ) ();
     ;(function(){window.z=function(results){var i=results.response.posts.length;while(i--){var postContainer=document.getElementById("tumblr"),postItem=document.createElement("article"),postItemContent=document.createElement("a"),postItemText=document.createElement("span");postItem.className="block cell cell-md-4";postItemContent.className="contents";postItem.setAttribute("data-src",results.response.posts[i].photos[0].alt_sizes[1].url);postItemContent.href=results.response.posts[i].post_url;postItemText.textContent="via "+results.response.posts[i].source_title;postItemContent.appendChild(postItemText);postItem.appendChild(postItemContent);postContainer.insertBefore(postItem,postContainer.firstChild);}toad.init();}}());
     ;(function(){window.GoogleAnalyticsObject="ga";window.ga=window.ga||function(){(window.ga.q=window.ga.q||[]).push(arguments)},window.ga.l=1*new Date();ga("create","UA-70873652-9","auto");ga("send","pageview");})();
     //--><!]]>
