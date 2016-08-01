@@ -1,23 +1,23 @@
 ;( function ()
-{
-  
+{ // true warriors always use strict
+
   "use strict";
   
   window.toad = 
-  {
+  { // lets define some helpers
     isImg : function ( element )
     {
       return "IMG" === element.tagName ? true : false;
     },
     
     isInArray : function ( arr, i, item )
-    {
+    { // can't use in operator on arrays, so...
       while ( i-- ) { if ( item === arr[i] ) { return true; } }
       return false;
     },
     
     isInViewport : function ( element )
-    {
+    { // kind of important...
       if ( !element || 1 !== element.nodeType ) { return false; }
       else 
       {
@@ -35,16 +35,17 @@
     },
     
     debounce : function ( func, wait, scope )
-    {
+    { // requestAnimationFrame isn't supported well enough for my tastes
       var timeout;
       
       return function () 
       {
-        var context = scope || this, args = arguments;
-        var later = function () {
-          timeout = null;
-          func.apply( context, args );
-        };
+        var context = scope || this, args = arguments,
+            later = function () {
+              timeout = null;
+              func.apply( context, args );
+            };
+            
         clearTimeout( timeout );
         timeout = setTimeout( later, wait );
       };
@@ -105,7 +106,7 @@
     },
     
     init : function () 
-    {
+    { // setup event listeners
       if ( "addEventListener" in window )
       { // add events in IE9+
         window.addEventListener( "load",   toad.load, false );
@@ -128,5 +129,5 @@
     }
     
   };
-  // toad.init(); to call immediately
+  // to call immediately, add toad.init() here
 } ) ();
