@@ -1,5 +1,5 @@
-;( function () {
-
+( function ()
+{
   window.toad = 
   {
     isImg : function (element)
@@ -109,10 +109,10 @@
       else
       {
         window.onload   = toad.load;
-        window.onscroll = toad.debounce( toad.load, 100, this);
-        window.onresize = toad.debounce( toad.load, 100, this);
+        window.onscroll = toad.debounce( toad.load, 100, this );
+        window.onresize = toad.debounce( toad.load, 100, this );
       }
       toad.load();
     }
   };
-}());
+} ) ();
