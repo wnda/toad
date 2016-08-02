@@ -54,23 +54,36 @@
       }
     },
     
-    debounce : function ( func, wait, scope )
-    { // requestAnimationFrame isn't supported well enough for my tastes
-      var timeout;
-      
-      return function () 
+    debounce : function(func, wait) 
+    { // because requestAnimationFrame isn't available everywhere
+      var timeout, args, context, timestamp;
+     
+      return function() 
       {
-        var context = scope || this, args = arguments,
-            later = function () {
-              timeout = null;
-              func.apply( context, args );
-            };
-            
-        clearTimeout( timeout );
-        timeout = setTimeout( later, wait );
-      };
+        context = this;
+        args = [].slice.call(arguments, 0);
+        timestamp = new Date();
+    
+        var later = function() 
+        {
+          var last = (new Date()) - timestamp;
+          if (last < wait) 
+          {
+            timeout = setTimeout(later, wait - last);
+          } 
+          else 
+          {
+            timeout = null;
+            func.apply(context, args);
+          }
+        };
       
-    },
+        if (!timeout)
+        {
+          timeout = setTimeout(later, wait);
+        }
+      }
+    };
     
     load : function () 
     { // get everything with data-src attribute
