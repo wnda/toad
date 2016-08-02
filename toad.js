@@ -169,22 +169,22 @@
       if ( "addEventListener" in window )
       { // add events in IE9+
         window.addEventListener( "load",   toad.load, false );
-        window.addEventListener( "scroll", toad.debounce( toad.load, 100, this ), false );
-        window.addEventListener( "resize", toad.debounce( toad.load, 100, this ), false );
+        window.addEventListener( "scroll", toad.debounce( toad.load, 100 ), false );
+        window.addEventListener( "resize", toad.debounce( toad.load, 100 ), false );
       }
       
       else if ( "attachEvent" in window )
       { // add events in IE8
         window.attachEvent( "onload",   toad.load );
-        window.attachEvent( "onscroll", toad.debounce( toad.load, 100, this ) );
-        window.attachEvent( "onresize", toad.debounce( toad.load, 100, this ) );
+        window.attachEvent( "onscroll", toad.debounce( toad.load, 100 ) );
+        window.attachEvent( "onresize", toad.debounce( toad.load, 100 ) );
       }
       
       else
       { // add events in ancient browsers
         window.onload   = toad.load;
-        window.onscroll = toad.debounce( toad.load, 100, this );
-        window.onresize = toad.debounce( toad.load, 100, this );
+        window.onscroll = toad.debounce( toad.load, 100 );
+        window.onresize = toad.debounce( toad.load, 100 );
       }
       
       toad.load();
