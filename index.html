@@ -22,7 +22,8 @@
     <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"/><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/classlist/2014.01.31/classList.min.js"></script><![endif]-->
     <!--[if lt IE 8]><meta http-equiv="refresh" content="0; url=http://outdatedbrowser.com/en"/><script type="text/javascript">window.location.href="http://outdatedbrowser.com/en"</script><style>body{display:none!important}</style><![endif]-->
     <link rel="canonical" href="https://toad.js.org/" />
-    <link rel="stylesheet" href="https://toad.js.org/main.css" />
+    <link rel="preload" as="style" href="https://toad.js.org/main.css" onload="this.rel='stylesheet';this.type='text/css';" />
+    <noscript><link rel="stylesheet" href="https://toad.js.org/main.css" /></noscript>
     <link rel="icon" href="https://cdn.rawgit.com/wnda/pivot/master/favicon.ico" />
   </head>
   <body>
@@ -185,6 +186,7 @@
     ;(function(){window.GoogleAnalyticsObject="ga";window.ga=window.ga||function(){(window.ga.q=window.ga.q||[]).push(arguments)},window.ga.l=1*new Date();ga("create","UA-70873652-9","auto");ga("send","pageview");})();
     //--><!]]>
     </script>
+    <script>;(function(){var w=document.head||document.getElementsByTagName("head")[0],x=(document.querySelectorAll('[rel="preload"][as="style"]')||document.getElementsByTagName('link')),y=x.length;if(!!x){while(y--){var f=((x[y].rel||x[y].getAttribute("rel"))==="preload"?!0:!1),g=(x[y].getAttribute("as")==="style"?!0:!1);if(!!f&&!!g){var a=document.createElement("link");a.rel="stylesheet";a.type="text/css";a.href=x[y].href;w.appendChild(a);}}}})();</script>
     <script src="https://api.tumblr.com/v2/blog/theobscureones.tumblr.com/posts?api_key=F1inWvdXEPkzzXNHZuV8B4MFPmsC9SQWONAkOfc6Jmf69U4H7O&limit=30&callback=z" type="text/javascript"></script>
   </body>
 </html>
