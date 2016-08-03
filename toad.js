@@ -40,7 +40,7 @@
     })();
   }
 
-  window.toad =
+  var toad =
   {
     // lets define some helpers
 
