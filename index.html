@@ -122,7 +122,7 @@
 
     rebounce : function(func)
     {
-      var wait, args;
+      var wait, args, context;
 
       return function () {
 
@@ -134,7 +134,7 @@
 
         args = arguments;
 
-        context = context || this;
+        context = this;
 
         requestAnimationFrame
         (
