@@ -101,8 +101,9 @@
     isImg : function ( el ){
 
       if ( !el || 1 !== el.nodeType ) return false;
-
-      return ("IMG" === el.tagName && !el.src);
+      if ( "IMG" !== el.tagName ) return false;
+      if ( !el.src ) return false;
+      return true;
 
     },
 
