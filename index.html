@@ -204,7 +204,7 @@
       for ( ; i > j; j++)
       { // iterate over retrieved elements
 
-        var styles = elements[j].getAttribute("style").split(":") || [],
+        var styles = elements[j].getAttribute("style") ? elements[j].getAttribute("style").split(":") : false,
             k      = styles.length || 0,
 
             // define conditions for loading
