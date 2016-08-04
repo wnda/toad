@@ -207,7 +207,7 @@
       { // iterate over retrieved elements
 
         var styles = elements[j].getAttribute("style") ? elements[j].getAttribute("style").split(":") : false,
-            k      = styles.length || 0,
+            k      = !!styles ? styles.length : 0,
 
             // define conditions for loading
 
