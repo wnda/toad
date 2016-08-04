@@ -91,11 +91,9 @@
   var toad =
   {
     // lets define some helpers
-    isImg : function ( el ){
+    isToadableImg : function ( el ){
       if ( !el || 1 !== el.nodeType ) return false;
-      if ( "IMG" !== el.tagName ) return false;
-      if ( !el.src ) return false;
-      return true;
+      return ("IMG" === el.tagName && !el.src);
     },
     isInArray : function ( arr, i, item ){
       while ( i-- )
@@ -133,7 +131,7 @@
     debounce : function(func, wait){
       // legacy debounce method for testing
       var timeout, args, context, timestamp;
-
+      
       wait = !!wait ? wait : 100;
       return function ()
       {
@@ -159,15 +157,6 @@
         }
       }
     },
-    check : function ( el ){
-      var styles         = !!(el.getAttribute( "style" )) ? el.getAttribute( "style" ).split( ":" ) : false,
-          k              = styles.length || 0,
-          couldBeLoaded  = (!!el.getAttribute( "data-src" ) && !!toad.isInViewport( el )),
-          hasBgImg       = ( !!styles && !!toad.isInArray( styles, k, "background-image" ) ),
-          isImg          = toad.isImg( el ),
-          shouldBeLoaded = (!!couldBeLoaded && !!isImg) ? "image" : ((!!couldBeLoaded && !hasBgImg) ? "bgImage" : "");
-      return shouldBeLoaded;
-    },
     load : function (){
       // get everything with data-src attribute, prepare to iterate
       // getElementsByAttribute in case querySelectorAll is not supported
@@ -176,21 +165,28 @@
           j         = 0;
       for ( ; i > j; j++)
       { // iterate over retrieved elements
-
-        switch( toad.check( elements[j] ) )
-        {
-          case "image":
-            elements[j].src = elements[j].getAttribute( "data-src" );
-            elements[j].removeAttribute( "data-src" );
-            return;
-
-          case "bgImage":
-            elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
-            elements[j].removeAttribute( "data-src" );
-            return;
-
-          default:
-            return;
+        var styles = !!elements[j].getAttribute("style") ? elements[j].getAttribute("style").split(":") : false,
+            k      = !!styles ? styles.length : 0,
+            // define conditions for loading
+            loadImg   = !!elements[j].getAttribute( "data-src" )  // data-src must have a value
+                     && !!toad.isInViewport( elements[j] )        // must be in the viewport
+                     && !!toad.isToadableImg( elements[j] ),      // must be an image with no src attribute
+            loadBgImg = !!elements[j].getAttribute( "data-src" )  // data-src must have a value
+                     && !!toad.isInViewport( elements[j] )        // must be in the viewport
+                     && !toad.isToadableImg( elements[j] )                // must not be an image
+                     && !!( !styles || !toad.isInArray( styles, k, "background-image" ) );
+                     // must not have a background image set already
+                     // this is important because, like src attribute,
+                     // this is how we ensure whether not to load loading
+        if (!!loadImg)
+        { // is an image and needs a src
+          elements[j].src = elements[j].getAttribute( "data-src" );
+          elements[j].removeAttribute( "data-src" );
+        }
+        if (!!loadBgImg)
+        { // is not an image and needs a background image
+          elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
+          elements[j].removeAttribute( "data-src" ); // prevent the next function call from touching this element
         }
       }
     },
