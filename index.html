@@ -164,25 +164,25 @@
             k              = !!styles ? styles.length : 0,
             shouldBeLoaded = !!elements[j].getAttribute( "data-src" ) && !!toad.isInViewport( elements[j] ),
             asImg          = !!toad.isImg( elements[j] ),
-            asBgImg        = !asImg && !!( !styles || !toad.isInArray( styles, k, "background-image" ) );
-
-        if ( !!shouldBeLoaded && !!asImg ) 
-        { // is an image and needs a src
-          elements[j].src = elements[j].getAttribute( "data-src" );
-          elements[j].removeAttribute( "data-src" );
-          return;
-        }
-        else if ( !!shouldBeLoaded && !!asBgImg ) 
-        { // is not an image and needs a background image
-          elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
-          elements[j].removeAttribute( "data-src" );
-          return;
-        }
-        else
+            asBgImg        = !!( !styles || !toad.isInArray( styles, k, "background-image" ) );
+        
+        if ( !!shouldBeLoaded )
         {
-          elements[j].removeAttribute( "data-src" );
-          return;
+          
+          if ( !!asImg ) 
+          { // is an image and needs a src
+            elements[j].src = elements[j].getAttribute( "data-src" );
+          }
+          
+          else if ( !!asBgImg ) 
+          { // is not an image and needs a background image
+            elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
+          }
+          
         }
+        
+        elements[j].removeAttribute( "data-src" );
+        
       }
     },
     
