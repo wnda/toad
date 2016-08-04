@@ -164,6 +164,8 @@
       // legacy debounce method for testing
 
       var timeout, args, context, timestamp;
+      
+      wait = !!wait ? wait : 100;
 
       return function ()
       {
