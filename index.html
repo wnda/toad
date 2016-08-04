@@ -179,9 +179,12 @@
             elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
           }
           
+          else
+          {
+            elements[j].removeAttribute( "data-src" );
+          }
+          
         }
-        
-        elements[j].removeAttribute( "data-src" );
         
       }
     },
