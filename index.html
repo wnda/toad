@@ -102,7 +102,7 @@
 
       if ( !el || 1 !== el.nodeType ) return false;
 
-      return "IMG" === el.tagName && !el.src;
+      return "IMG" === el.tagName;
 
     },
 
@@ -206,7 +206,7 @@
       for ( ; i > j; j++)
       { // iterate over retrieved elements
 
-        let styles = elements[j].getAttribute("style") ? elements[j].getAttribute("style").split(":") : false,
+        var styles = elements[j].getAttribute("style") ? elements[j].getAttribute("style").split(":") : false,
             k      = !!styles ? styles.length : 0,
 
             // define conditions for loading
