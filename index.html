@@ -215,7 +215,7 @@
 
             loadBgImg = !!elements[j].getAttribute( "data-src" )  // data-src must have a value
                      && !!toad.isInViewport( elements[j] )        // must be in the viewport
-                     && !toad.isImg( elements[j] )                // must not be an image
+                     && !toad.isToadableImg( elements[j] )                // must not be an image
                      && !!( !styles || !toad.isInArray( styles, k, "background-image" ) );
                      // must not have a background image set already
                      // this is important because, like src attribute,
