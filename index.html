@@ -49,7 +49,7 @@
     <script async="async" src="https://www.google-analytics.com/analytics.js" type="text/javascript"></script>
     <script type="text/javascript">
     <!--//--><![CDATA[//><!--
-    ;(function(root,factory){
+;(function(root,factory){
   if(typeof define==='function'&&define.amd)
   {
     define([],factory(root));
@@ -57,9 +57,7 @@
   else if(typeof exports==='object'){module.exports=factory(root);}
   else{root.toad = factory(root);}})
 (typeof global!=='undefined'?global:this.window||this.global,function(root){
-
   "use strict";
-
   // first, browser support
   Document.prototype.getElementsByAttribute
   =
@@ -71,15 +69,12 @@
         i = nodeList.length,
         j = 0,
         nodeArray = [];
-
     for (; i > j; j++)
     {
       !!nodeList[j].getAttribute( attr ) && nodeArray.push( nodeList[j] );
     }
-
     return nodeArray;
   };
-
   // let's just sneak this in here
   if( !window.requestAnimationFrame )
   {
@@ -93,39 +88,27 @@
               };
     })();
   }
-
   var toad =
   {
     // lets define some helpers
-
     isImg : function ( el ){
-
       if ( !el || 1 !== el.nodeType ) return false;
       if ( "IMG" !== el.tagName ) return false;
       if ( !el.src ) return false;
       return true;
-
     },
-
     isInArray : function ( arr, i, item ){
-
       while ( i-- )
       {
         if ( item === arr[i] ) return true;
       }
-
       return false;
-
     },
-
     isInViewport : function ( el ){
-
       if ( !el || 1 !== el.nodeType ) return false;
-
       var w = ( window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth  ),
           h = ( window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight ),
           r = el.getBoundingClientRect();
-
       return (
         !!r
         && r.bottom > 0
@@ -133,51 +116,33 @@
         && r.top    < h
         && r.left   < w
       );
-
     },
-
     rebounce : function(func){
-
       // standard debouncing option using requestAnimationFrame, which we shimmed above
-
       var timeout, args, context;
-
       return function (){
-
         context = this;
         args = [].slice.call( arguments, 0 );
-
         cancelAnimationFrame( timeout );
-
         timeout = requestAnimationFrame( function (){
-
           func.apply( context, args );
           timeout = null;
-
         });
-
       }
-
     },
-
     debounce : function(func, wait){
-
       // legacy debounce method for testing
-
       var timeout, args, context, timestamp;
-      
-      wait = !!wait ? wait : 100;
 
+      wait = !!wait ? wait : 100;
       return function ()
       {
         context = this;
         args = [].slice.call( arguments, 0 );
         timestamp = new Date();
-
         var later = function()
         {
           var last = ( new Date() ) - timestamp;
-
           if ( last < wait )
           {
             timeout = setTimeout(later, wait - last);
@@ -188,94 +153,73 @@
             timeout = null;
           }
         };
-
         if (!timeout)
         {
           timeout = setTimeout(later, wait);
         }
       }
     },
-
     check : function ( el ){
-
-      var styles         = !!el.getAttribute( "style" ) ? el.getAttribute( "style" ).split( ":" ) : false,
+      var styles         = !!(el.getAttribute( "style" )) ? el.getAttribute( "style" ).split( ":" ) : false,
           k              = styles.length || 0,
-          couldBeLoaded  = !!el.getAttribute( "data-src" ) && toad.isInViewport( el ),
-          hasBgImg       = !!( !styles || !toad.isInArray( styles, k, "background-image" ) ),
-          isImg          = !!toad.isImg( el ),
+          couldBeLoaded  = (!!el.getAttribute( "data-src" ) && !!toad.isInViewport( el )),
+          hasBgImg       = ( !!styles && !!toad.isInArray( styles, k, "background-image" ) ),
+          isImg          = toad.isImg( el ),
           shouldBeLoaded = (!!couldBeLoaded && !!isImg) ? "image" : ((!!couldBeLoaded && !hasBgImg) ? "bgImage" : "");
-
       return shouldBeLoaded;
-
-
     },
-
     load : function (){
-
       // get everything with data-src attribute, prepare to iterate
       // getElementsByAttribute in case querySelectorAll is not supported
       var elements  = document.querySelectorAll( "[data-src]" ) || document.getElementsByAttribute( "data-src" ),
           i         = elements.length,
           j         = 0;
-
       for ( ; i > j; j++)
       { // iterate over retrieved elements
         var willbeLoaded = toad.check( elements[j] );
-        
+
         switch( willbeLoaded )
         {
           case "image":
             elements[j].src = elements[j].getAttribute( "data-src" );
             elements[j].removeAttribute( "data-src" );
             return;
-            
+
           case "bgImage":
             elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
             elements[j].removeAttribute( "data-src" );
             return;
-          
+
           default:
             elements[j].removeAttribute( "data-src" );
             return;
         }
-
       }
-
     },
-
     init : function ( config ){
-
       var debounceMethod = ( !!config && !!config.useLegacyDebounce ? "debounce" : "rebounce" );
-
       // setup event listeners, load anything in the viewport
-
       if ( "addEventListener" in window )
       { // add events in IE9+
         window.addEventListener( "load",   toad.load, false );
         window.addEventListener( "scroll", toad[ debounceMethod ]( toad.load ), false );
         window.addEventListener( "resize", toad[ debounceMethod ]( toad.load ), false );
       }
-
       else if ( "attachEvent" in window )
       { // add events in IE8
         window.attachEvent( "onload",   toad.load );
         window.attachEvent( "onscroll", toad[ debounceMethod ]( toad.load, 100 ) );
         window.attachEvent( "onresize", toad[ debounceMethod ]( toad.load, 100 ) );
       }
-
       else
       { // add events in ancient browsers
         window.onload   = toad.load;
         window.onscroll = toad[ debounceMethod ]( toad.load, 100 );
         window.onresize = toad[ debounceMethod ]( toad.load, 100 );
       }
-
     }
-
   };
-
   return toad;
-
 } );
 
 
