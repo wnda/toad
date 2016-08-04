@@ -68,6 +68,7 @@
         }
         return nodeArray;
       };
+      
       // let's just sneak this in here
       if( !window.requestAnimationFrame )
       {
@@ -81,6 +82,7 @@
                   };
         })();
       }
+      
       window.toad =
       {
         // lets define some helpers
@@ -89,6 +91,7 @@
           if ( "IMG" !== el.tagName ) return false;
           return !el.src;
         },
+        
         isInArray : function ( arr, i, item ){
           while ( i-- )
           {
@@ -96,6 +99,7 @@
           }
           return false;
         },
+        
         isInViewport : function ( el ){
           if ( !el || 1 !== el.nodeType ) return false;
           var w = ( window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth  ),
@@ -109,6 +113,7 @@
             && r.left   < w
           );
         },
+        
         rebounce : function(func){
           // standard debouncing option using requestAnimationFrame, which we shimmed above
           var timeout, args, context;
@@ -122,6 +127,7 @@
             });
           }
         },
+        
         debounce : function(func, wait){
           // legacy debounce method for testing
           var timeout, args, context, timestamp;
@@ -151,6 +157,7 @@
             }
           }
         },
+        
         load : function (){
           // get everything with data-src attribute, prepare to iterate
           // getElementsByAttribute in case querySelectorAll is not supported
