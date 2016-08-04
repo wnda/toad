@@ -1,11 +1,5 @@
-;(function(root,factory){
-  if(typeof define==='function'&&define.amd){define([], factory(root));}
-  else if(typeof exports==='object'){module.exports=factory(root);}
-  else{root.toad = factory(root);}})
-(typeof global!=='undefined'?global:this.window||this.global,function(root){
-  
+;(function(){
   "use strict";
-
   // first, browser support
   Document.prototype.getElementsByAttribute
   =
@@ -17,15 +11,12 @@
         i = nodeList.length,
         j = 0,
         nodeArray = [];
-
     for (; i > j; j++)
     {
       !!nodeList[j].getAttribute( attr ) && nodeArray.push( nodeList[j] );
     }
-
     return nodeArray;
   };
-  
   // let's just sneak this in here
   if( !window.requestAnimationFrame )
   {
@@ -39,213 +30,131 @@
               };
     })();
   }
-
-  var toad =
+  window.toad =
   {
     // lets define some helpers
-
-    isImg : function ( el ){
-
-      return "IMG" === el.tagName ? true : false;
-
+    isToadableImg : function ( el ){
+      if ( !el || 1 !== el.nodeType ) return false;
+      return ("IMG" === el.tagName && !el.src);
     },
-
     isInArray : function ( arr, i, item ){
-
-      // can't use in operator, so...
-
-      while ( i-- ) { if ( item === arr[i] ) { return true; } }
-
+      while ( i-- )
+      {
+        if ( item === arr[i] ) return true;
+      }
       return false;
-
     },
-
     isInViewport : function ( el ){
-
-      // kind of important...
-
-      if ( !el || 1 !== el.nodeType )
-      {
-        return false;
-      }
-
-      else
-      {
-        var w = ( window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth  ),
-            h = ( window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight ),
-            r = el.getBoundingClientRect();
-        return (
-          !!r
-          && r.bottom > 0
-          && r.right  > 0
-          && r.top    < h
-          && r.left   < w
-        );
-      }
-
+      if ( !el || 1 !== el.nodeType ) return false;
+      var w = ( window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth  ),
+          h = ( window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight ),
+          r = el.getBoundingClientRect();
+      return (
+        !!r
+        && r.bottom > 0
+        && r.right  > 0
+        && r.top    < h
+        && r.left   < w
+      );
     },
-
     rebounce : function(func){
-
-      // standard debouncing option using requestAnimationFrame shimmed above
-
-      var ticking, args, context;
-
+      // standard debouncing option using requestAnimationFrame, which we shimmed above
+      var timeout, args, context;
       return function (){
-
-        if ( !!ticking ) return;
-
-        ticking = true;
-        args = arguments;
         context = this;
-
-        requestAnimationFrame( function (){
-
-          ticking = false;
-
-          func.apply(context, args);
-
+        args = [].slice.call( arguments, 0 );
+        cancelAnimationFrame( timeout );
+        timeout = requestAnimationFrame( function (){
+          func.apply( context, args );
+          timeout = null;
         });
       }
     },
-
     debounce : function(func, wait){
-
-      // because requestAnimationFrame isn't available everywhere
-
+      // legacy debounce method for testing
       var timeout, args, context, timestamp;
-
-      return function()
+      
+      wait = !!wait ? wait : 100;
+      return function ()
       {
         context = this;
-        args = [].slice.call(arguments, 0);
+        args = [].slice.call( arguments, 0 );
         timestamp = new Date();
-
         var later = function()
         {
-          var last = (new Date()) - timestamp;
-
-          if (last < wait)
+          var last = ( new Date() ) - timestamp;
+          if ( last < wait )
           {
             timeout = setTimeout(later, wait - last);
           }
           else
           {
+            func.apply( context, args );
             timeout = null;
-            func.apply(context, args);
           }
         };
-
         if (!timeout)
         {
           timeout = setTimeout(later, wait);
         }
       }
     },
-
     load : function (){
-
       // get everything with data-src attribute, prepare to iterate
-
+      // getElementsByAttribute in case querySelectorAll is not supported
       var elements  = document.querySelectorAll( "[data-src]" ) || document.getElementsByAttribute( "data-src" ),
           i         = elements.length,
           j         = 0;
-
       for ( ; i > j; j++)
-      { // holy shit
-
-        if ( !!elements[j].getAttribute( "data-src" ) && !!toad.isInViewport( elements[j] ) )
-        { // has data-src and is in viewport
-
-          if ( !!elements[j].getAttribute( "style" ) )
-          { // has style attribute set
-
-            var styles = elements[j].getAttribute("style").split(":"),
-                k      = styles.length;
-
-            if ( !toad.isInArray( styles, k, "background-image" ) )
-            { // has no backgroundImage set
-
-              if ( !!toad.isImg( elements[j] ) )
-              { // is image
-                elements[j].src = elements[j].getAttribute( "data-src" );
-              }
-
-              else
-              { // is not image and has no background image set
-                elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
-              }
-            }
-
-            else
-            { // has background-image already set
-              elements[j].removeAttribute( "data-src" );
-            }
-
-          }
-
-          else
-          { // has no style attribute set, but has data-src and is in viewport
-
-            if ( !!toad.isImg( elements[j] ) )
-            { // is image
-
-              if ( elements[j].getAttribute( "data-src" ) !== elements[j].src )
-              { // src is empty or data-src does not match src attribute
-                elements[j].src = elements[j].getAttribute( "data-src" );
-              }
-
-              else
-              { // data-src and src are same; remove data-src to prevent rechecking
-                elements[j].removeAttribute( "data-src" );
-              }
-
-            }
-
-            else
-            { // not an image, but is in viewport, has data-src and has no attribute styles
-              elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
-            }
-
-          }
-
+      { // iterate over retrieved elements
+        var styles = !!elements[j].getAttribute("style") ? elements[j].getAttribute("style").split(":") : false,
+            k      = !!styles ? styles.length : 0,
+            // define conditions for loading
+            loadImg   = !!elements[j].getAttribute( "data-src" )  // data-src must have a value
+                     && !!toad.isInViewport( elements[j] )        // must be in the viewport
+                     && !!toad.isToadableImg( elements[j] ),      // must be an image with no src attribute
+            loadBgImg = !!elements[j].getAttribute( "data-src" )  // data-src must have a value
+                     && !!toad.isInViewport( elements[j] )        // must be in the viewport
+                     && !toad.isToadableImg( elements[j] )                // must not be an image
+                     && !!( !styles || !toad.isInArray( styles, k, "background-image" ) );
+                     // must not have a background image set already
+                     // this is important because, like src attribute,
+                     // this is how we ensure whether not to load loading
+        if (!!loadImg)
+        { // is an image and needs a src
+          elements[j].src = elements[j].getAttribute( "data-src" );
+          elements[j].removeAttribute( "data-src" );
         }
-
+        if (!!loadBgImg)
+        { // is not an image and needs a background image
+          elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
+          elements[j].removeAttribute( "data-src" ); // prevent the next function call from touching this element
+        }
       }
-
     },
-
     init : function ( config ){
-       
       var debounceMethod = ( !!config && !!config.useLegacyDebounce ? "debounce" : "rebounce" );
-      
-      // setup event listeners, load anything in the viewport 
-
+      // setup event listeners, load anything in the viewport
       if ( "addEventListener" in window )
       { // add events in IE9+
         window.addEventListener( "load",   toad.load, false );
         window.addEventListener( "scroll", toad[ debounceMethod ]( toad.load ), false );
         window.addEventListener( "resize", toad[ debounceMethod ]( toad.load ), false );
       }
-
       else if ( "attachEvent" in window )
       { // add events in IE8
         window.attachEvent( "onload",   toad.load );
         window.attachEvent( "onscroll", toad[ debounceMethod ]( toad.load, 100 ) );
         window.attachEvent( "onresize", toad[ debounceMethod ]( toad.load, 100 ) );
       }
-
       else
       { // add events in ancient browsers
         window.onload   = toad.load;
         window.onscroll = toad[ debounceMethod ]( toad.load, 100 );
         window.onresize = toad[ debounceMethod ]( toad.load, 100 );
       }
-
     }
-
   };
-
-  return toad;
-
-} );
+  
+  toad.init();
+} ) ();
