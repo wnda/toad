@@ -176,9 +176,8 @@
           j         = 0;
       for ( ; i > j; j++)
       { // iterate over retrieved elements
-        var willbeLoaded = toad.check( elements[j] );
 
-        switch( willbeLoaded )
+        switch( toad.check( elements[j] ) )
         {
           case "image":
             elements[j].src = elements[j].getAttribute( "data-src" );
