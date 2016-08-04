@@ -102,7 +102,7 @@
 
       if ( !el || 1 !== el.nodeType ) return false;
 
-      return "IMG" === el.tagName;
+      return ("IMG" === el.tagName && !el.src);
 
     },
 
@@ -206,7 +206,7 @@
       for ( ; i > j; j++)
       { // iterate over retrieved elements
 
-        var styles = elements[j].getAttribute("style") ? elements[j].getAttribute("style").split(":") : false,
+        var styles = !!elements[j].getAttribute("style") ? elements[j].getAttribute("style").split(":") : false,
             k      = !!styles ? styles.length : 0,
 
             // define conditions for loading
@@ -225,13 +225,13 @@
 
         if (!!loadImg)
         { // is an image and needs a src
-          elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
+          elements[j].src = elements[j].getAttribute( "data-src" );
           elements[j].removeAttribute( "data-src" );
         }
 
         if (!!loadBgImg)
         { // is not an image and needs a background image
-          elements[j].src = elements[j].getAttribute( "data-src" );
+          elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
           elements[j].removeAttribute( "data-src" ); // prevent the next function call from touching this element
         }
 
