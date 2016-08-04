@@ -1,5 +1,7 @@
 ;(function(){
+  
   "use strict";
+  
   // first, browser support
   Document.prototype.getElementsByAttribute
   =
@@ -17,6 +19,7 @@
     }
     return nodeArray;
   };
+  
   // let's just sneak this in here
   if( !window.requestAnimationFrame )
   {
@@ -30,6 +33,7 @@
               };
     })();
   }
+  
   window.toad =
   {
     // lets define some helpers
@@ -38,6 +42,7 @@
       if ( "IMG" !== el.tagName ) return false;
       return !el.src;
     },
+    
     isInArray : function ( arr, i, item ){
       while ( i-- )
       {
@@ -45,6 +50,7 @@
       }
       return false;
     },
+    
     isInViewport : function ( el ){
       if ( !el || 1 !== el.nodeType ) return false;
       var w = ( window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth  ),
@@ -58,6 +64,7 @@
         && r.left   < w
       );
     },
+    
     rebounce : function(func){
       // standard debouncing option using requestAnimationFrame, which we shimmed above
       var timeout, args, context;
@@ -71,6 +78,7 @@
         });
       }
     },
+    
     debounce : function(func, wait){
       // legacy debounce method for testing
       var timeout, args, context, timestamp;
@@ -100,6 +108,7 @@
         }
       }
     },
+    
     load : function (){
       // get everything with data-src attribute, prepare to iterate
       // getElementsByAttribute in case querySelectorAll is not supported
@@ -113,25 +122,28 @@
             k              = !!styles ? styles.length : 0,
             shouldBeLoaded = !!elements[j].getAttribute( "data-src" ) && !!toad.isInViewport( elements[j] ),
             asImg          = !!toad.isImg( elements[j] ),
-            asBgImg        = !asImg && !!( !styles || !toad.isInArray( styles, k, "background-image" ) );
-
-        if ( !!shouldBeLoaded && !!asImg ) 
-        { // is an image and needs a src
-          elements[j].src = elements[j].getAttribute( "data-src" );
-          elements[j].removeAttribute( "data-src" );
-          return;
-        }
-        else if ( !!shouldBeLoaded && !!asBgImg ) 
-        { // is not an image and needs a background image
-          elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
-          elements[j].removeAttribute( "data-src" );
-          return;
-        }
-        else
+            asBgImg        = !!( !styles || !toad.isInArray( styles, k, "background-image" ) );
+        
+        if ( !!shouldBeLoaded )
         {
-          elements[j].removeAttribute( "data-src" );
-          return;
+          
+          if ( !!asImg ) 
+          { // is an image and needs a src
+            elements[j].src = elements[j].getAttribute( "data-src" );
+          }
+          
+          else if ( !!asBgImg ) 
+          { // is not an image and needs a background image
+            elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
+          }
+          
+          else
+          {
+            elements[j].removeAttribute( "data-src" );
+          }
+          
         }
+        
       }
     },
     
@@ -159,5 +171,4 @@
     }
   };
   
-  toad.init();
 } ) ();
