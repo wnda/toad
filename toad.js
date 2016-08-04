@@ -33,9 +33,10 @@
   window.toad =
   {
     // lets define some helpers
-    isToadableImg : function ( el ){
+    isImg : function ( el ){
       if ( !el || 1 !== el.nodeType ) return false;
-      return ("IMG" === el.tagName && !el.src);
+      if ( "IMG" !== el.tagName ) return false;
+      return !el.src;
     },
     isInArray : function ( arr, i, item ){
       while ( i-- )
@@ -105,33 +106,35 @@
       var elements  = document.querySelectorAll( "[data-src]" ) || document.getElementsByAttribute( "data-src" ),
           i         = elements.length,
           j         = 0;
+          
       for ( ; i > j; j++)
       { // iterate over retrieved elements
-        var styles = !!elements[j].getAttribute("style") ? elements[j].getAttribute("style").split(":") : false,
-            k      = !!styles ? styles.length : 0,
-            // define conditions for loading
-            loadImg   = !!elements[j].getAttribute( "data-src" )  // data-src must have a value
-                     && !!toad.isInViewport( elements[j] )        // must be in the viewport
-                     && !!toad.isToadableImg( elements[j] ),      // must be an image with no src attribute
-            loadBgImg = !!elements[j].getAttribute( "data-src" )  // data-src must have a value
-                     && !!toad.isInViewport( elements[j] )        // must be in the viewport
-                     && !toad.isToadableImg( elements[j] )                // must not be an image
-                     && !!( !styles || !toad.isInArray( styles, k, "background-image" ) );
-                     // must not have a background image set already
-                     // this is important because, like src attribute,
-                     // this is how we ensure whether not to load loading
-        if (!!loadImg)
+        var styles         = !!elements[j].getAttribute("style") ? elements[j].getAttribute("style").split(":") : false,
+            k              = !!styles ? styles.length : 0,
+            shouldBeLoaded = !!elements[j].getAttribute( "data-src" ) && !!toad.isInViewport( elements[j] ),
+            asImg          = !!toad.isImg( elements[j] )
+            asBgImg        = !asImg && !!( !styles || !toad.isInArray( styles, k, "background-image" ) );
+
+        if ( !!shouldBeLoaded && !!asImg ) 
         { // is an image and needs a src
           elements[j].src = elements[j].getAttribute( "data-src" );
           elements[j].removeAttribute( "data-src" );
+          return;
         }
-        if (!!loadBgImg)
+        else if ( !!shouldBeLoaded && !!asBgImg ) 
         { // is not an image and needs a background image
           elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
-          elements[j].removeAttribute( "data-src" ); // prevent the next function call from touching this element
+          elements[j].removeAttribute( "data-src" );
+          return;
+        }
+        else
+        {
+          elements[j].removeAttribute( "data-src" );
+          return;
         }
       }
     },
+    
     init : function ( config ){
       var debounceMethod = ( !!config && !!config.useLegacyDebounce ? "debounce" : "rebounce" );
       // setup event listeners, load anything in the viewport
