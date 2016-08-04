@@ -199,12 +199,12 @@
 
       var styles         = !!el.getAttribute( "style" ) ? el.getAttribute( "style" ).split( ":" ) : false,
           k              = styles.length || 0,
-          shouldBeLoaded = !!el.getAttribute( "data-src" ) && toad.isInViewport( el ),
+          couldBeLoaded  = !!el.getAttribute( "data-src" ) && toad.isInViewport( el ),
           hasBgImg       = !!( !styles || !toad.isInArray( styles, k, "background-image" ) ),
           isImg          = !!toad.isImg( el ),
-          isLoadable     = (!!shouldBeLoaded && !!isImg) ? "image" : ((!!shouldBeLoaded && !hasBgImg) ? "bgImage" : "");
+          shouldBeLoaded = (!!couldBeLoaded && !!isImg) ? "image" : ((!!couldBeLoaded && !hasBgImg) ? "bgImage" : "");
 
-      return isLoadable;
+      return shouldBeLoaded;
 
 
     },
@@ -219,9 +219,9 @@
 
       for ( ; i > j; j++)
       { // iterate over retrieved elements
-        var isToadable = check( elements[j] );
+        var willbeLoaded = toad.check( elements[j] );
         
-        switch(isToadable)
+        switch( willbeLoaded )
         {
           case "image":
             elements[j].src = elements[j].getAttribute( "data-src" );
@@ -234,6 +234,7 @@
             return;
           
           default:
+            elements[j].removeAttribute( "data-src" );
             return;
         }
 
