@@ -2,8 +2,6 @@ toad.js
 =======
 load images based on viewport visibility
 
-115 sloc &middot; 3.8KB (1.9 KB minified)
-
 this script will pick up anything with an image specified in a `data-src` attribute, detect whether it's an `img` element or any other kind of element, and lazyload the image and apply it when the element is visible in the viewport.
 
 ## the rules
@@ -32,4 +30,4 @@ and that's it. everything else is magic.
 
 
 ## Browser support
-Theoretically, this is pretty much bulletproof. `getAttribute` works in IE5
+Theoretically, this is bulletproof as far back as IE7 minimum.
