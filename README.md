@@ -30,4 +30,4 @@ and that's it. everything else is magic.
 
 
 ## Browser support
-Theoretically, this is bulletproof as far back as IE7 minimum.
+Theoretically, this is bulletproof as far back as IE7, possibly further. However, I have not tested it with these browsers yet.
