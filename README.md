@@ -10,7 +10,7 @@ this script will pick up anything with an image specified in a `data-src` attrib
 
 - any element with a `style` attribute specifying a `background-image` already **will be passed over in silence**. use `data-src` for this too.
 
-- `debounce` function throttles scroll-triggered and resize-triggered lazyloads
+- `rebounce`/`debounce` function throttles scroll-triggered and resize-triggered lazyloads
 
 ## why this one?
 [lazysizes](https://github.com/aFarkas/lazysizes) is cool, but it's not as lean at over 500 lines of code, and it's overkill if you just want to set images and background-images lazily. it also requires an additional extension to handle the latter. it also goes to the trouble of governing CSS transitions, which should be left to your stylesheet for **many** reasons.
