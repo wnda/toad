@@ -1,42 +1,13 @@
-/* https://gist.github.com/paulirish/1579671 */
-;(function(){
-    var lastTime = 0;
-    var vendors = ['ms', 'moz', 'webkit', 'o'];
-    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
-                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
-    }
- 
-    if (!window.requestAnimationFrame)
-        window.requestAnimationFrame = function(callback, element) {
-            var currTime = new Date().getTime();
-            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-            var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
-              timeToCall);
-            lastTime = currTime + timeToCall;
-            return id;
-        };
-  
-    if (!window.cancelAnimationFrame)
-        window.cancelAnimationFrame = function(id) {
-            clearTimeout(id);
-        };
-}());
-
 /* toad.js */
-(function(){
+var toad = (function(){
   
-  "use strict";
+  'use strict';
   
-  // first, browser support
-  Document.prototype.getElementsByAttribute
-  =
-  Element.prototype.getElementsByAttribute
-  =
-  function(attr)
-  {
-    var nodeList = this.getElementsByTagName( "*" ),
+  // first, extreme browser support
+  Document.prototype.getElementsByAttribute 
+  = Element.prototype.getElementsByAttribute 
+  = function ( attr ){
+    var nodeList = this.getElementsByTagName( '*' ),
         i = nodeList.length,
         j = 0,
         nodeArray = [];
@@ -47,81 +18,92 @@
     return nodeArray;
   };
   
-  window.toad =
+  // requestAnimationFrame shim
+  if ( !window.requestAnimationFrame ) {
+  	window.requestAnimationFrame = ( function() {
+  		return window.webkitRequestAnimationFrame ||
+  		       window.mozRequestAnimationFrame ||
+          	 window.oRequestAnimationFrame ||
+          	 window.msRequestAnimationFrame ||
+          	 function( callback, element ) {
+               window.setTimeout( callback, 1000 / 60 );
+  		       };
+  	} ) ();
+  }
+  
+  // cancelAnimationFrame shim
+  if ( !window.cancelAnimationFrame )
   {
-    // lets define some helpers
-    isImg : function ( el ){
-      if ( !el || 1 !== el.nodeType ) return false;
-      if ( "IMG" !== el.tagName ) return false;
-      return !el.src;
-    },
-    
-    isInArray : function ( arr, i, item ){
-      while ( i-- )
-      {
-        if ( item === arr[i] ) return true;
-      }
-      return false;
-    },
-    
-    isInViewport : function ( el ){
-      if ( !el || 1 !== el.nodeType ) return false;
-      var w = ( window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth  ),
-          h = ( window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight ),
-          r = el.getBoundingClientRect();
-      return (
-        !!r
-        && r.bottom > 0
-        && r.right  > 0
-        && r.top    < h
-        && r.left   < w
-      );
-    },
-    
-    rebounce : function(func){
-      // standard debouncing option using requestAnimationFrame, which we shimmed above
-      var timeout, args, context;
-      return function (){
-        context = this;
-        args = [].slice.call( arguments, 0 );
-        cancelAnimationFrame( timeout );
-        timeout = requestAnimationFrame( function (){
-          func.apply( context, args );
-          timeout = null;
-        });
-      }
-    },
-    
-    debounce : function(func, wait){
-      // legacy debounce method for testing
-      var timeout, args, context, timestamp;
-      
-      wait = !!wait ? wait : 100;
-      return function ()
-      {
-        context = this;
-        args = [].slice.call( arguments, 0 );
-        timestamp = new Date();
-        var later = function()
-        {
-          var last = ( new Date() ) - timestamp;
-          if ( last < wait )
-          {
-            timeout = setTimeout(later, wait - last);
-          }
-          else
-          {
-            func.apply( context, args );
-            timeout = null;
-          }
-        };
-        if (!timeout)
-        {
-          timeout = setTimeout(later, wait);
-        }
-      }
-    },
-    
+      window.cancelAnimationFrame = ( function() {
+    		return window.cancelRequestAnimationFrame ||
+    		       window.mozCancelAnimationFrame ||
+            	 window.oCancelAnimationFrame ||
+            	 window.msCancelAnimationFrame ||
+            	 function( id ) {
+                 window.cancelTimeout( id );
+    		       };
+    	} ) ();
+  } 
+  
+  /**
+    PRIVATE METHODS i.e. HELPER FUNCTIONS
+  **/
+  // Detect if the element an image for toad to load
+  var isImg = function ( el ){
+    if ( !el || 1 !== el.nodeType ) return false;
+    if ( "IMG" !== el.tagName ) return false;
+    return !el.src;
+  };
+  
+  // Detect whether something is in an array of somethings
+  // This is used to detect the presence of background-image in an element's attribute styles
+  var isInArray = function ( arr, i, item ){
+    while ( i-- )
+    {
+      if ( item === arr[i] ) return true;
+    }
+    return false;
+  };
+  
+  // Detect if an element is in the viewport
+  // This is really quite obvious really
+  var isInViewport = function ( el ){
+    if ( !el || 1 !== el.nodeType ) return false;
+    var w = ( window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth  ),
+        h = ( window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight ),
+        r = el.getBoundingClientRect();
+    return (
+      !!r
+      && r.bottom > 0
+      && r.right  > 0
+      && r.top    < h
+      && r.left   < w
+    );
+  };
+  
+  // Use requestAnimationFrame to throttle the execution of a function
+  // This is our drop-in alternative to _.debounce or _.throttle to leverage
+  // the new requestAnimationFrame API
+  var rebounce = function( func ){
+    // standard debouncing option using requestAnimationFrame, which we shimmed above
+    var timeout, args, context;
+    return function (){
+      context = this;
+      args = [].slice.call( arguments, 0 );
+      window.cancelAnimationFrame( timeout );
+      timeout = window.requestAnimationFrame( function (){
+        func.apply( context, args );
+        timeout = null;
+      });
+    }
+  };
+  
+  return
+  {
+    /**
+      PUBLIC METHODS
+    **/
+    // Load images & background images
     load : function (){
       // get everything with data-src attribute, prepare to iterate
       // getElementsByAttribute in case querySelectorAll is not supported
@@ -129,9 +111,16 @@
           i         = elements.length,
           j         = 0;
           
+      if ( !i ) 
+      {
+        if ( "addEventListener" in window ) window.removeEventListener( "load", toad.load, false );
+        else if ( "attachEvent" in window ) window.detachEvent( "onload",   toad.load );
+        else window.onload = null;
+      }
+          
       for ( ; i > j; j++)
       { // iterate over retrieved elements
-        var styles         = !!elements[j].getAttribute("style") ? elements[j].getAttribute("style").split(":") : false,
+        var styles         = !!elements[j].getAttribute( "style" ) ? elements[j].getAttribute( "style" ).split( ":" ) : false,
             k              = !!styles ? styles.length : 0,
             shouldBeLoaded = !!elements[j].getAttribute( "data-src" ) && !!toad.isInViewport( elements[j] ),
             asImg          = !!toad.isImg( elements[j] ),
@@ -160,27 +149,55 @@
       }
     },
     
-    init : function ( config ){
-      var debounceMethod = ( !!config && !!config.useLegacyDebounce ? "debounce" : "rebounce" );
+    // start listening for events to trigger loads
+    startListening : function (){
+      
       // setup event listeners, load anything in the viewport
       if ( "addEventListener" in window )
-      { // add events in IE9+
+      { // add events in normal browsers & IE9+
         window.addEventListener( "load",   toad.load, false );
-        window.addEventListener( "scroll", toad[ debounceMethod ]( toad.load ), false );
-        window.addEventListener( "resize", toad[ debounceMethod ]( toad.load ), false );
+        window.addEventListener( "scroll", rebounce( toad.load ), false );
+        window.addEventListener( "resize", rebounce( toad.load ), false );
       }
+      
       else if ( "attachEvent" in window )
-      { // add events in IE8
+      { // add events in IE8...
         window.attachEvent( "onload",   toad.load );
-        window.attachEvent( "onscroll", toad[ debounceMethod ]( toad.load, 100 ) );
-        window.attachEvent( "onresize", toad[ debounceMethod ]( toad.load, 100 ) );
+        window.attachEvent( "onscroll", rebounce( toad.load ) );
+        window.attachEvent( "onresize", rebounce( toad.load ) );
       }
+      
       else
       { // add events in ancient browsers
         window.onload   = toad.load;
-        window.onscroll = toad[ debounceMethod ]( toad.load, 100 );
-        window.onresize = toad[ debounceMethod ]( toad.load, 100 );
+        window.onscroll = rebounce( toad.load );
+        window.onresize = rebounce( toad.load );
       }
+    },
+    
+    // Stop listening for events to trigger loads
+    // This is automatically triggered when all of the elements with a data-src attribute
+    // are loaded. If you intend to add content to the page, using this would be ill-advised.
+    stopListening : function (){
+      
+      if ( "addEventListener" in window )
+      { // remove events in normal browsers & IE9+
+        window.removeEventListener( "scroll", rebounce( toad.load ), false );
+        window.removeEventListener( "resize", rebounce( toad.load ), false );
+      }
+      
+      else if ( "attachEvent" in window )
+      { // remove events in IE8...
+        window.detachEvent( "onscroll", rebounce( toad.load ) );
+        window.detachEvent( "onresize", rebounce( toad.load ) );
+      }
+      
+      else
+      { // remove events in ancient browsers
+        window.onscroll = null;
+        window.onresize = null;
+      }
+      
     }
   };
   
