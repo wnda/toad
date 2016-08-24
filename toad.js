@@ -20,29 +20,31 @@
   
   // requestAnimationFrame shim
   if ( !window.requestAnimationFrame ) {
-  	window.requestAnimationFrame = ( function() {
-  		return window.webkitRequestAnimationFrame ||
-  		       window.mozRequestAnimationFrame ||
-          	 window.oRequestAnimationFrame ||
-          	 window.msRequestAnimationFrame ||
-          	 function( callback, element ) {
-               window.setTimeout( callback, 1000 / 60 );
-  		       };
-  	} ) ();
+    window.requestAnimationFrame = ( function(){
+      return 
+        window.webkitRequestAnimationFrame      ||
+        window.mozRequestAnimationFrame         ||
+        window.oRequestAnimationFrame           ||
+        window.msRequestAnimationFrame          ||
+        function( callback, element ) {
+          window.setTimeout( callback, 1000 / 60 );
+        };
+    })();
   }
   
   // cancelAnimationFrame shim
   if ( !window.cancelAnimationFrame )
   {
-      window.cancelAnimationFrame = ( function() {
-    		return window.cancelRequestAnimationFrame ||
-    		       window.mozCancelAnimationFrame ||
-            	 window.oCancelAnimationFrame ||
-            	 window.msCancelAnimationFrame ||
-            	 function( id ) {
-                 window.cancelTimeout( id );
-    		       };
-    	} ) ();
+    window.cancelAnimationFrame = ( function(){
+      return 
+        window.cancelRequestAnimationFrame      ||
+        window.mozCancelAnimationFrame          ||
+        window.oCancelAnimationFrame            ||
+        window.msCancelAnimationFrame           ||
+        function( id ) {
+          window.cancelTimeout( id );
+        };
+    })();
   } 
   
   /**
@@ -98,11 +100,11 @@
     }
   };
   
+  /**
+    PUBLIC METHODS
+  **/
   window.toad = 
   {
-    /**
-      PUBLIC METHODS
-    **/
     // Load images & background images
     load : function (){
       // get everything with data-src attribute, prepare to iterate
@@ -128,30 +130,24 @@
         
         if ( !!shouldBeLoaded )
         {
-          
           if ( !!asImg ) 
           { // is an image and needs a src
             elements[j].src = elements[j].getAttribute( 'data-src' );
           }
-          
           else if ( !!asBgImg ) 
           { // is not an image and needs a background image
             elements[j].style.backgroundImage = 'url(' + elements[j].getAttribute( 'data-src' ) + ')';
           }
-          
           else
           {
             elements[j].removeAttribute( 'data-src' );
           }
-          
         }
-        
       }
     },
     
     // Start listening for events to trigger loads
     startListening : function (){
-      
       // Setup event listeners, load anything in the viewport
       if ( "addEventListener" in window )
       { // Add events in normal browsers & IE9+
@@ -159,14 +155,12 @@
         window.addEventListener( 'scroll', rebounce( toad.load ), false );
         window.addEventListener( 'resize', rebounce( toad.load ), false );
       }
-      
       else if ( "attachEvent" in window )
       { // Add events in IE8...
         window.attachEvent( 'onload',   toad.load );
         window.attachEvent( 'onscroll', rebounce( toad.load ) );
         window.attachEvent( 'onresize', rebounce( toad.load ) );
       }
-      
       else
       { // Add events in ancient browsers
         window.onload   = toad.load;
@@ -178,28 +172,23 @@
     // Stop listening for events to trigger loads
     // This is automatically triggered when all of the elements with a data-src attribute
     // are loaded. If you intend to add content to the page, using this would be ill-advised.
-    // 
     stopListening : function (){
-      
+      // Remove events in normal browsers & IE9+
       if ( "addEventListener" in window )
-      { // Remove events in normal browsers & IE9+
+      {
         window.removeEventListener( 'scroll', rebounce( toad.load ), false );
         window.removeEventListener( 'resize', rebounce( toad.load ), false );
       }
-      
       else if ( "attachEvent" in window )
       { // Remove events in IE8...
         window.detachEvent( 'onscroll', rebounce( toad.load ) );
         window.detachEvent( 'onresize', rebounce( toad.load ) );
       }
-      
       else
       { // Remove events in ancient browsers
         window.onscroll = null;
         window.onresize = null;
       }
-      
     }
   };
-  
-} ) ();
+})();
