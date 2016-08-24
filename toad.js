@@ -1,5 +1,5 @@
 /* toad.js */
-var toad = (function(){
+( function (){
   
   'use strict';
   
@@ -98,7 +98,7 @@ var toad = (function(){
     }
   };
   
-  return
+  window.toad = 
   {
     /**
       PUBLIC METHODS
