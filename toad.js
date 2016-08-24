@@ -1,5 +1,5 @@
 /* toad.js */
-( function (){
+;( function (){
   
   'use strict';
   
@@ -51,7 +51,7 @@
   // Detect if the element an image for toad to load
   var isImg = function ( el ){
     if ( !el || 1 !== el.nodeType ) return false;
-    if ( "IMG" !== el.tagName ) return false;
+    if ( 'IMG' !== el.tagName ) return false;
     return !el.src;
   };
   
@@ -107,41 +107,41 @@
     load : function (){
       // get everything with data-src attribute, prepare to iterate
       // getElementsByAttribute in case querySelectorAll is not supported
-      var elements  = document.querySelectorAll( "[data-src]" ) || document.getElementsByAttribute( "data-src" ),
+      var elements  = document.querySelectorAll( '[data-src]' ) || document.getElementsByAttribute( 'data-src' ),
           i         = elements.length,
           j         = 0;
           
       if ( !i ) 
       {
-        if ( "addEventListener" in window ) window.removeEventListener( "load", toad.load, false );
-        else if ( "attachEvent" in window ) window.detachEvent( "onload",   toad.load );
+        if ( 'addEventListener' in window ) window.removeEventListener( 'load', toad.load, false );
+        else if ( 'attachEvent' in window ) window.detachEvent( 'onload',   toad.load );
         else window.onload = null;
       }
           
       for ( ; i > j; j++)
       { // iterate over retrieved elements
-        var styles         = !!elements[j].getAttribute( "style" ) ? elements[j].getAttribute( "style" ).split( ":" ) : false,
+        var styles         = !!elements[j].getAttribute( 'style' ) ? elements[j].getAttribute( 'style' ).split( ':' ) : false,
             k              = !!styles ? styles.length : 0,
-            shouldBeLoaded = !!elements[j].getAttribute( "data-src" ) && !!toad.isInViewport( elements[j] ),
+            shouldBeLoaded = !!elements[j].getAttribute( 'data-src' ) && !!toad.isInViewport( elements[j] ),
             asImg          = !!toad.isImg( elements[j] ),
-            asBgImg        = !!( !styles || !toad.isInArray( styles, k, "background-image" ) );
+            asBgImg        = !!( !styles || !toad.isInArray( styles, k, 'background-image' ) );
         
         if ( !!shouldBeLoaded )
         {
           
           if ( !!asImg ) 
           { // is an image and needs a src
-            elements[j].src = elements[j].getAttribute( "data-src" );
+            elements[j].src = elements[j].getAttribute( 'data-src' );
           }
           
           else if ( !!asBgImg ) 
           { // is not an image and needs a background image
-            elements[j].style.backgroundImage = "url(" + elements[j].getAttribute( "data-src" ) + ")";
+            elements[j].style.backgroundImage = 'url(' + elements[j].getAttribute( 'data-src' ) + ')';
           }
           
           else
           {
-            elements[j].removeAttribute( "data-src" );
+            elements[j].removeAttribute( 'data-src' );
           }
           
         }
@@ -149,26 +149,26 @@
       }
     },
     
-    // start listening for events to trigger loads
+    // Start listening for events to trigger loads
     startListening : function (){
       
-      // setup event listeners, load anything in the viewport
+      // Setup event listeners, load anything in the viewport
       if ( "addEventListener" in window )
-      { // add events in normal browsers & IE9+
-        window.addEventListener( "load",   toad.load, false );
-        window.addEventListener( "scroll", rebounce( toad.load ), false );
-        window.addEventListener( "resize", rebounce( toad.load ), false );
+      { // Add events in normal browsers & IE9+
+        window.addEventListener( 'load',   toad.load, false );
+        window.addEventListener( 'scroll', rebounce( toad.load ), false );
+        window.addEventListener( 'resize', rebounce( toad.load ), false );
       }
       
       else if ( "attachEvent" in window )
-      { // add events in IE8...
-        window.attachEvent( "onload",   toad.load );
-        window.attachEvent( "onscroll", rebounce( toad.load ) );
-        window.attachEvent( "onresize", rebounce( toad.load ) );
+      { // Add events in IE8...
+        window.attachEvent( 'onload',   toad.load );
+        window.attachEvent( 'onscroll', rebounce( toad.load ) );
+        window.attachEvent( 'onresize', rebounce( toad.load ) );
       }
       
       else
-      { // add events in ancient browsers
+      { // Add events in ancient browsers
         window.onload   = toad.load;
         window.onscroll = rebounce( toad.load );
         window.onresize = rebounce( toad.load );
@@ -178,22 +178,23 @@
     // Stop listening for events to trigger loads
     // This is automatically triggered when all of the elements with a data-src attribute
     // are loaded. If you intend to add content to the page, using this would be ill-advised.
+    // 
     stopListening : function (){
       
       if ( "addEventListener" in window )
-      { // remove events in normal browsers & IE9+
-        window.removeEventListener( "scroll", rebounce( toad.load ), false );
-        window.removeEventListener( "resize", rebounce( toad.load ), false );
+      { // Remove events in normal browsers & IE9+
+        window.removeEventListener( 'scroll', rebounce( toad.load ), false );
+        window.removeEventListener( 'resize', rebounce( toad.load ), false );
       }
       
       else if ( "attachEvent" in window )
-      { // remove events in IE8...
-        window.detachEvent( "onscroll", rebounce( toad.load ) );
-        window.detachEvent( "onresize", rebounce( toad.load ) );
+      { // Remove events in IE8...
+        window.detachEvent( 'onscroll', rebounce( toad.load ) );
+        window.detachEvent( 'onresize', rebounce( toad.load ) );
       }
       
       else
-      { // remove events in ancient browsers
+      { // Remove events in ancient browsers
         window.onscroll = null;
         window.onresize = null;
       }
