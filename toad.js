@@ -124,9 +124,9 @@
       { // iterate over retrieved elements
         var styles         = !!elements[j].getAttribute( 'style' ) ? elements[j].getAttribute( 'style' ).split( ':' ) : false,
             k              = !!styles ? styles.length : 0,
-            shouldBeLoaded = !!elements[j].getAttribute( 'data-src' ) && !!toad.isInViewport( elements[j] ),
-            asImg          = !!toad.isImg( elements[j] ),
-            asBgImg        = !!( !styles || !toad.isInArray( styles, k, 'background-image' ) );
+            shouldBeLoaded = !!elements[j].getAttribute( 'data-src' ) && !!isInViewport( elements[j] ),
+            asImg          = !!isImg( elements[j] ),
+            asBgImg        = !!( !styles || !isInArray( styles, k, 'background-image' ) );
         
         if ( !!shouldBeLoaded )
         {
