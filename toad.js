@@ -87,14 +87,16 @@
   // This is our drop-in alternative to _.debounce or _.throttle to leverage
   // the new requestAnimationFrame API
   var rebounce = function( func ){
-    // standard debouncing option using requestAnimationFrame, which we shimmed above
-    var timeout, args, context;
-    return function (){
+    var timeout, context;
+    var args = [];
+    var len = args.length = arguments.length;
+    var i = 0;
+    for(; i < len; ++i) args[i] = arguments[i];
+    return function(){
       context = this;
-      args = [].slice.call( arguments, 0 );
-      window.cancelAnimationFrame( timeout );
-      timeout = window.requestAnimationFrame( function (){
-        func.apply( context, args );
+      window.cancelAnimationFrame(timeout);
+      timeout = window.requestAnimationFrame(function(){
+        func.apply(context, args);
         timeout = null;
       });
     }
