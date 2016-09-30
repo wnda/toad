@@ -113,7 +113,6 @@
           case 'image':
             elements[j].src = elements[j].getAttribute('data-src');
             elements[j].removeAttribute('data-src');
-            break;
 
           case 'bg':
             elements[j].style.backgroundImage = 'url('+elements[j].getAttribute('data-src')+')';
