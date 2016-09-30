@@ -65,7 +65,7 @@
       win.addEventListener(ev,h,!1) : 
         win.attachEvent ? 
           win.attachEvent('on'+ev,h) : 
-            win['on'+ev] = h
+            win['on'+ev] = h;
   };
   
   var removeEventHandler = function(ev,h){
@@ -107,15 +107,17 @@
           isImage = isImg(elements[j]),
           needsBgImage = (!styles || !isInArray(styles,k,'background-image')),
           type = isImage ? 'image' : (needsBgImage ? 'bg' : 'none');
-
+      console.log(shouldBeLoaded,isImage,needsBgImage,type);
       if(!!shouldBeLoaded){
         switch(type){
           case 'image':
+            console.log('img',elements[j]);
             elements[j].src = elements[j].getAttribute('data-src');
             elements[j].removeAttribute('data-src');
             break;
 
           case 'bg':
+            console.log('bg',elements[j]);
             elements[j].style.backgroundImage = 'url('+elements[j].getAttribute('data-src')+')';
             elements[j].removeAttribute('data-src');
             break;
@@ -152,4 +154,4 @@
     startListening: start,
     stopListening: stop
   };
-})(window,window.document);
+})(this,this.document);
