@@ -69,7 +69,7 @@
       win.addEventListener(ev,h,!1) : 
         win.attachEvent ? 
           win.attachEvent('on'+ev,h) : 
-            win.['on'+ev] = h
+            win['on'+ev] = h
   };
   
   var removeEventHandler = function(ev,h){
@@ -77,7 +77,7 @@
       win.removeEventListener(ev,h,!1) : 
         win.detachEvent ? 
           win.detachEvent('on'+ev,h) : 
-            win.['on'+ev] = null;
+            win['on'+ev] = null;
   };
   
   // Use requestAnimationFrame to throttle the execution of a function
