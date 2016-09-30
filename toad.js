@@ -1,7 +1,8 @@
 /* toad.js */
+// pass in window, window.document
 ;(function(win,doc){
   
-  // first, extreme browser support
+  // first, for some extreme browser support
   if(!doc.querySelectorAll){
     Document.prototype.getElementsByAttribute 
     = Element.prototype.getElementsByAttribute 
@@ -14,7 +15,7 @@
     };
   }
   
-  // requestAnimationFrame shim
+  // now add a crap requestAnimationFrame shim
   if(!win.requestAnimationFrame){
     win.requestAnimationFrame = (function(){
       return win.webkitRequestAnimationFrame
@@ -25,61 +26,55 @@
     })();
   }
   
-  // cancelAnimationFrame shim
-  if (!win.cancelAnimationFrame){
+  // same again please
+  if(!win.cancelAnimationFrame){
     win.cancelAnimationFrame = (function(){
-      return win.cancelRequestAnimationFrame
+      return win.webkitCancelRequestAnimationFrame
           || win.mozCancelAnimationFrame
           || win.oCancelAnimationFrame
           || win.msCancelAnimationFrame
           || function(id){return win.cancelTimeout(id)};
     })();
-  } 
+  }
   
-  /**
-    PRIVATE METHODS i.e. HELPER FUNCTIONS
-  **/
-  // Detect if the element an image for toad to load
-  var isImg = function(el){
-    if(!!el && 'img' === el.tagName.toLowerCase() && !el.src) return true;
-    return false;
-  };
-  
-  // Detect whether something is in an array of somethings
-  // This is used to detect the presence of background-image in an element's attribute styles
-  var isInArray = function (arr,i,item){
-    while(i--) if(item === arr[i]) return true;
-    return false;
-  };
-  
-  // Detect if an element is in the viewport
-  // This is really quite obvious really
-  var isInViewport = function(el){
-    if (!el || 1 !== el.nodeType) return false;
-    var r = el.getBoundingClientRect(), wh = (win.innerHeight || doc.documentElement.clientHeight || doc.body.clientHeight);
-    return (r.top >= 0 && r.left >= 0 && r.top <= wh);
-  };
-  
-  var addEventHandler = function(ev,h){
+  // normalise event handling
+  function addEventHandler(ev,h){
     win.addEventListener ?
       win.addEventListener(ev,h,!1) : 
         win.attachEvent ? 
           win.attachEvent('on'+ev,h) : 
             win['on'+ev] = h;
-  };
+  }
   
-  var removeEventHandler = function(ev,h){
+  // same again for removing handlers
+  function removeEventHandler(ev,h){
     win.removeEventListener ?
       win.removeEventListener(ev,h,!1) : 
         win.detachEvent ? 
           win.detachEvent('on'+ev,h) : 
             win['on'+ev] = null;
-  };
+  }
+  
+  // Flag whether something is in an array of somethings
+  // This is used to detect the presence of background-image in an element's attribute styles
+  function isInArray(arr,i,item){
+    while(i--) if(item === arr[i]) return true;
+    return false;
+  }
+  
+  // Detect if an element is in the viewport
+  // This is really quite obvious really
+  function isInViewport(el){
+    var r = el.getBoundingClientRect(), wh = (win.innerHeight || doc.documentElement.clientHeight || doc.body.clientHeight);
+    return r.top >= 0 && r.left >= 0 && r.top <= wh;
+  }
   
   // Use requestAnimationFrame to throttle the execution of a function
   // This is our drop-in alternative to _.debounce or _.throttle to leverage
-  // the new requestAnimationFrame API
-  var rebounce = function(f){
+  // the new requestAnimationFrame API, which we normalised earlier
+  // note the means of passing arguments without referencing arguments, only
+  // arguments.length and arguments[n], thereby allowing V8 to optimise
+  function rebounce(f){
     var scheduled, context, args, len, i;
     return function(){
       context = this; args = [];
@@ -91,9 +86,9 @@
         scheduled = null;
       });
     }
-  };
+  }
   
-  var toad = function(){
+  function load(){
     // get everything with data-src attribute, prepare to iterate
     // getElementsByAttribute in case querySelectorAll is not supported
     var elements = doc.querySelectorAll('[data-src]') || doc.getElementsByAttribute('data-src'),
@@ -103,10 +98,10 @@
       // iterate over retrieved elements
       var styles = !!elements[j].getAttribute('style') ? elements[j].getAttribute('style').split(':') : false,
           k = !!styles ? styles.length : 0,
-          shouldBeLoaded = !!elements[j].getAttribute('data-src') && !!isInViewport(elements[j]),
-          isImage = isImg(elements[j]),
-          needsBgImage = (!styles || !isInArray(styles,k,'background-image')),
-          type = isImage ? 'image' : (needsBgImage ? 'bg' : 'none');
+          shouldBeLoaded = !!elements[j].getAttribute('data-src') && isInViewport(elements[j]),
+          isImage = 'img' === elements[j].tagName.toLowerCase() && !elements[j].src,
+          needsBgImage = !styles || !isInArray(styles,k,'background-image'),
+          type = isImage ? 'image' : needsBgImage ? 'bg' : 'none';
       
       if(!!shouldBeLoaded){
         switch(type){
@@ -119,33 +114,41 @@
             elements[j].style.backgroundImage = 'url('+elements[j].getAttribute('data-src')+')';
             elements[j].removeAttribute('data-src');
             break;
-
+          
+          // we arrive here if the element has data-src, is in the viewport,
+          // isn't an image and doesn't need a background-image
+          // unlikely but possible
           default:
             elements[j].removeAttribute('data-src');
         }
       }
     }
-    if(i <= 0) win.toad.stopListening();
-  };
+    // remove event listeners if there's nothing in the DOM
+    // with a data-src attribute -- our work is done
+    if(i <= 0) stop();
+  }
   
-  var start = function(){
+  function toad(){
+    return rebounce(load());
+  }
+  
+  function start(){
     // Setup event listeners, load anything in the viewport
-      addEventHandler('load',toad);
-      addEventHandler('scroll',rebounce(toad));
-      addEventHandler('resize',rebounce(toad));
-  };
+    addEventHandler('load',load);
+    addEventHandler('scroll',toad);
+    addEventHandler('resize',toad);
+  }
 
-  var stop = function(){
+  function stop(){
     // Stop listening for events to trigger loads
-    removeEventHandler('scroll',rebounce(toad));
-    removeEventHandler('resize',rebounce(toad));
-  };
+    removeEventHandler('load',load);
+    removeEventHandler('scroll',toad);
+    removeEventHandler('resize',toad);
+  }
   
   /**
     PUBLIC METHODS
   **/
-  win.toad = {   
-    startListening: start,
-    stopListening: stop
-  };
+  win.toad = { startListening: start };
+
 })(window,window.document);
