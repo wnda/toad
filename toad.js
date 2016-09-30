@@ -113,7 +113,8 @@
           case 'image':
             elements[j].src = elements[j].getAttribute('data-src');
             elements[j].removeAttribute('data-src');
-
+            break;
+            
           case 'bg':
             elements[j].style.backgroundImage = 'url('+elements[j].getAttribute('data-src')+')';
             elements[j].removeAttribute('data-src');
@@ -127,21 +128,17 @@
     if(i <= 0) win.toad.stopListening();
   };
   
-  var rebounceToad = function(){
-    return rebounce(toad);
-  };
-  
   var start = function(){
     // Setup event listeners, load anything in the viewport
       addEventHandler('load',toad);
-      win.addEventListener('scroll',rebounceToad,false);
-      addEventHandler('resize',rebounceToad);
+      addEventHandler('scroll',rebounce(toad));
+      addEventHandler('resize',rebounce(toad));
   };
 
   var stop = function(){
     // Stop listening for events to trigger loads
-    removeEventHandler('scroll',rebounceToad);
-    removeEventHandler('resize',rebounceToad);
+    removeEventHandler('scroll',rebounce(toad));
+    removeEventHandler('resize',rebounce(toad));
   };
   
   /**
