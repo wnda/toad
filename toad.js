@@ -120,18 +120,18 @@
         var styles = elements[j].getAttribute('style') ? elements[j].getAttribute('style').split(':') : false,
             k = styles ? styles.length : 0,
             shouldBeLoaded = elements[j].getAttribute('data-src') && !!isInViewport(elements[j]),
-            type = !!shouldBeLoaded && 
-                     (!!isImg(elements[j]) ? 'image' :
-                       (!styles || !isInArray(styles,k,'background-image')) ? 'bg' : 'none');
-        switch(type){
-          case 'image':
-            elements[j].src = elements[j].getAttribute('data-src');
-            break;
-          case 'bg':
-            elements[j].style.backgroundImage = 'url('+elements[j].getAttribute('data-src')+')';
-            break;
-          default:
-            elements[j].removeAttribute('data-src');
+            type = !!isImg(elements[j]) ? 'image' : (!styles || !isInArray(styles,k,'background-image')) ? 'bg' : 'none';
+        if(!!shouldBeLoaded){
+          switch(type){
+            case 'image':
+              elements[j].src = elements[j].getAttribute('data-src');
+              break;
+            case 'bg':
+              elements[j].style.backgroundImage = 'url('+elements[j].getAttribute('data-src')+')';
+              break;
+            default:
+              elements[j].removeAttribute('data-src');
+          }
         }
       }
     },
