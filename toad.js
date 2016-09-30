@@ -132,25 +132,24 @@
     return rebounce(toad);
   };
   
+  var start = function(){
+    // Setup event listeners, load anything in the viewport
+      addEventHandler('load',toad);
+      addEventHandler('scroll',rebounceToad);
+      addEventHandler('resize',rebounceToad);
+  };
+
+  var stop = function(){
+    // Stop listening for events to trigger loads
+    removeEventHandler('scroll',rebounceToad);
+    removeEventHandler('resize',rebounceToad);
+  };
+  
   /**
     PUBLIC METHODS
   **/
   win.toad = {   
-    // Start listening for events to trigger loads
-    startListening: function(){
-      // Setup event listeners, load anything in the viewport
-        addEventHandler('load',toad);
-        addEventHandler('scroll',rebounceToad);
-        addEventHandler('resize',rebounceToad);
-    },
-    
-    // Stop listening for events to trigger loads
-    // This is automatically triggered when all of the elements with a data-src attribute
-    // are loaded. If you intend to add content to the page, using this would be ill-advised.
-    stopListening: function(){
-      // Remove events
-      removeEventHandler('scroll',rebounceToad);
-      removeEventHandler('resize',rebounceToad);
-    }
+    startListening: start,
+    stopListening: stop
   };
 })(window,window.document);
