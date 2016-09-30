@@ -49,8 +49,7 @@
   // Detect whether something is in an array of somethings
   // This is used to detect the presence of background-image in an element's attribute styles
   var isInArray = function (arr,i,item){
-    while(i--)
-      if(item === arr[i]) return true;
+    while(i--) if(item === arr[i]) return true;
     return false;
   };
   
@@ -86,10 +85,8 @@
   var rebounce = function(f){
     var scheduled, context, args, len, i;
     return function(){
-      context = this;
-      args = [];
-      len = args.length = arguments.length;
-      i = 0;
+      context = this; args = [];
+      len = args.length = arguments.length; i = 0;
       for(; i < len; ++i) args[i] = arguments[i];
       win.cancelAnimationFrame(scheduled);
       scheduled = win.requestAnimationFrame(function(){
@@ -99,62 +96,66 @@
     }
   };
   
+  var toad = function(){
+    // get everything with data-src attribute, prepare to iterate
+    // getElementsByAttribute in case querySelectorAll is not supported
+    var elements  = doc.querySelectorAll('[data-src]') || doc.getElementsByAttribute('data-src'),
+        i = elements.length, j = 0;
+
+    if(i <= 0){
+      win.toad.stopListening();
+      return;
+    }
+
+    for(; i > j; j++){
+      // iterate over retrieved elements
+      var styles = !!elements[j].getAttribute('style') ? elements[j].getAttribute('style').split(':') : false,
+          k = !!styles ? styles.length : 0,
+          shouldBeLoaded = !!elements[j].getAttribute('data-src') && !!isInViewport(elements[j]),
+          type = !!isImg(elements[j]) ? 'image' : (!styles || !isInArray(styles,k,'background-image')) ? 'bg' : 'none';
+
+      if(!!shouldBeLoaded){
+        switch(type){
+          case 'image':
+            elements[j].src = elements[j].getAttribute('data-src');
+            elements[j].removeAttribute('data-src');
+            break;
+
+          case 'bg':
+            elements[j].style.backgroundImage = 'url('+elements[j].getAttribute('data-src')+')';
+            elements[j].removeAttribute('data-src');
+            break;
+
+          default:
+            elements[j].removeAttribute('data-src');
+        }
+      }
+    }
+  };
+  
+  var rebounceToad = function(){
+    return rebounce(toad);
+  };
+  
   /**
     PUBLIC METHODS
   **/
-  win.toad = {
-    // Load images & background images
-    load : function(){
-      // get everything with data-src attribute, prepare to iterate
-      // getElementsByAttribute in case querySelectorAll is not supported
-      var elements  = doc.querySelectorAll( '[data-src]' ) || doc.getElementsByAttribute( 'data-src' ),
-          i         = elements.length,
-          j         = 0;
-          
-      if(!i){
-        removeEventHandler('load',win.toad.load);
-      }
-          
-      for(; i > j; j++){
-        // iterate over retrieved elements
-        var styles = elements[j].getAttribute('style') ? elements[j].getAttribute('style').split(':') : false,
-            k = styles ? styles.length : 0,
-            shouldBeLoaded = elements[j].getAttribute('data-src') && !!isInViewport(elements[j]),
-            type = !!isImg(elements[j]) ? 'image' : (!styles || !isInArray(styles,k,'background-image')) ? 'bg' : 'none';
-        if(!!shouldBeLoaded){
-          switch(type){
-            case 'image':
-              elements[j].src = elements[j].getAttribute('data-src');
-              break;
-            case 'bg':
-              elements[j].style.backgroundImage = 'url('+elements[j].getAttribute('data-src')+')';
-              break;
-            default:
-              elements[j].removeAttribute('data-src');
-          }
-        }
-      }
-    },
-    
-    rebouncedLoad : function(){
-      return rebounce(win.toad.load);
-    },
-    
+  win.toad = {   
     // Start listening for events to trigger loads
-    startListening : function(){
+    startListening: function(){
       // Setup event listeners, load anything in the viewport
-        addEventHandler('load',win.toad.load);
-        addEventHandler('scroll',win.toad.rebouncedLoad);
-        addEventHandler('resize',win.toad.rebouncedLoad);
+        addEventHandler('load',toad);
+        addEventHandler('scroll',rebounceToad);
+        addEventHandler('resize',rebounceToad);
     },
     
     // Stop listening for events to trigger loads
     // This is automatically triggered when all of the elements with a data-src attribute
     // are loaded. If you intend to add content to the page, using this would be ill-advised.
-    stopListening : function(){
+    stopListening: function(){
       // Remove events
-      removeEventHandler('scroll',win.toad.rebouncedLoad);
-      removeEventHandler('resize',win.toad.rebouncedLoad);
+      removeEventHandler('scroll',rebounceToad);
+      removeEventHandler('resize',rebounceToad);
     }
   };
 })(window,window.document);
