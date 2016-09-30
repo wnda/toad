@@ -9,8 +9,7 @@
       var nodeList = this.getElementsByTagName('*'),
           i = nodeList.length, j = 0, nodeArray = [];
       nodeArray.length = i;
-      for(; i > j; j++) 
-        if(nodeList[j].getAttribute(attr)) nodeArray[j] = nodeList[j];
+      for(; i > j; j++) if(nodeList[j].getAttribute(attr)) nodeArray[j] = nodeList[j];
       return nodeArray;
     };
   }
@@ -57,10 +56,8 @@
   // This is really quite obvious really
   var isInViewport = function(el){
     if (!el || 1 !== el.nodeType) return false;
-    var r = el.getBoundingClientRect();
-    return r.top  >= 0 
-        && r.left >= 0 
-        && r.top  <= (win.innerHeight || doc.documentElement.clientHeight);
+    var r = el.getBoundingClientRect(), wh = (win.innerHeight || doc.documentElement.clientHeight);
+    return (r.top >= 0 && r.left >= 0 && r.top <= wh);
   };
   
   var addEventHandler = function(ev,h){
@@ -99,7 +96,7 @@
   var toad = function(){
     // get everything with data-src attribute, prepare to iterate
     // getElementsByAttribute in case querySelectorAll is not supported
-    var elements  = doc.querySelectorAll('[data-src]') || doc.getElementsByAttribute('data-src'),
+    var elements = doc.querySelectorAll('[data-src]') || doc.getElementsByAttribute('data-src'),
         i = elements.length, j = 0;
 
     for(; i > j; j++){
@@ -107,7 +104,9 @@
       var styles = !!elements[j].getAttribute('style') ? elements[j].getAttribute('style').split(':') : false,
           k = !!styles ? styles.length : 0,
           shouldBeLoaded = !!elements[j].getAttribute('data-src') && !!isInViewport(elements[j]),
-          type = !!isImg(elements[j]) ? 'image' : (!styles || !isInArray(styles,k,'background-image')) ? 'bg' : 'none';
+          isImage = isImg(elements[j]),
+          needsBgImage = (!styles || !isInArray(styles,k,'background-image')),
+          type = isImage ? 'image' : (needsBgImage ? 'bg' : 'none');
 
       if(!!shouldBeLoaded){
         switch(type){
@@ -126,6 +125,7 @@
         }
       }
     }
+    if(i <= 0) win.toad.stopListening();
   };
   
   var rebounceToad = function(){
