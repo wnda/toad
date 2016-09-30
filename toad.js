@@ -88,7 +88,7 @@
     }
   }
   
-  function load(){
+  function prep(){
     // get everything with data-src attribute, prepare to iterate
     // getElementsByAttribute in case querySelectorAll is not supported
     var elements = doc.querySelectorAll('[data-src]') || doc.getElementsByAttribute('data-src'),
@@ -96,52 +96,55 @@
 
     for(; i > j; ++j){
       // iterate over retrieved elements
-      var styles = !!elements[j].getAttribute('style') ? elements[j].getAttribute('style').split(':') : false,
+      var this_el = elements[j],
+          styles = !!this_el.getAttribute('style') ? this_el.getAttribute('style').split(':') : false,
           k = !!styles ? styles.length : 0,
-          shouldBeLoaded = !!elements[j].getAttribute('data-src') && isInViewport(elements[j]),
-          isImage = 'img' === elements[j].tagName.toLowerCase() && !elements[j].src,
+          shouldBeLoaded = !!this_el.getAttribute('data-src') && isInViewport(this_el),
+          isImage = 'img' === this_el.tagName.toLowerCase() && !this_el.src,
           needsBgImage = !styles || !isInArray(styles,k,'background-image'),
           type = isImage ? 'image' : needsBgImage ? 'bg' : 'none';
       
-      if(!!shouldBeLoaded){
-        switch(type){
-          case 'image':
-            elements[j].src = elements[j].getAttribute('data-src');
-            elements[j].removeAttribute('data-src');
-            break;
-            
-          case 'bg':
-            elements[j].style.backgroundImage = 'url('+elements[j].getAttribute('data-src')+')';
-            elements[j].removeAttribute('data-src');
-            break;
-          
-          // we arrive here if the element has data-src, is in the viewport,
-          // isn't an image and doesn't need a background-image
-          // unlikely but possible
-          default:
-            elements[j].removeAttribute('data-src');
-        }
-      }
+      if(shouldBeLoaded) load(this_el,type);
     }
     // remove event listeners if there's nothing in the DOM
     // with a data-src attribute -- our work is done
     if(i <= 0) stop();
   }
   
+  function load(el,type){
+    switch(type){
+      case 'image':
+        el.src = el.getAttribute('data-src');
+        el.removeAttribute('data-src');
+        break;
+
+      case 'bg':
+        el.style.backgroundImage = 'url('+el.getAttribute('data-src')+')';
+        el.removeAttribute('data-src');
+        break;
+
+      // we arrive here if the element has data-src, is in the viewport,
+      // isn't an image and doesn't need a background-image
+      // unlikely but possible
+      default:
+        el.removeAttribute('data-src');
+    }
+  }
+  
   function toad(){
-    return rebounce(load());
+    return rebounce(prep());
   }
   
   function start(){
     // Setup event listeners, load anything in the viewport
-    addEventHandler('load',load);
+    addEventHandler('load',prep);
     addEventHandler('scroll',toad);
     addEventHandler('resize',toad);
   }
 
   function stop(){
     // Stop listening for events to trigger loads
-    removeEventHandler('load',load);
+    removeEventHandler('load',prep);
     removeEventHandler('scroll',toad);
     removeEventHandler('resize',toad);
   }
