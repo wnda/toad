@@ -56,7 +56,7 @@
   // This is really quite obvious really
   var isInViewport = function(el){
     if (!el || 1 !== el.nodeType) return false;
-    var r = el.getBoundingClientRect(), wh = (win.innerHeight || doc.documentElement.clientHeight);
+    var r = el.getBoundingClientRect(), wh = (win.innerHeight || doc.documentElement.clientHeight || doc.body.clientHeight);
     return (r.top >= 0 && r.left >= 0 && r.top <= wh);
   };
   
@@ -148,4 +148,4 @@
     startListening: start,
     stopListening: stop
   };
-})(this,this.document);
+})(window,window.document);
