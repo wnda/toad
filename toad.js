@@ -102,11 +102,6 @@
     var elements  = doc.querySelectorAll('[data-src]') || doc.getElementsByAttribute('data-src'),
         i = elements.length, j = 0;
 
-    if(i <= 0){
-      win.toad.stopListening();
-      return;
-    }
-
     for(; i > j; j++){
       // iterate over retrieved elements
       var styles = !!elements[j].getAttribute('style') ? elements[j].getAttribute('style').split(':') : false,
