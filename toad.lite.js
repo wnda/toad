@@ -1,4 +1,4 @@
-/* toad.js */
+/* toad.lite.js */
 ;(function(win,doc){
 
   var isInArray = function (arr,i,item){
