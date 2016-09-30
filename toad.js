@@ -99,7 +99,7 @@
     var elements = doc.querySelectorAll('[data-src]') || doc.getElementsByAttribute('data-src'),
         i = elements.length, j = 0;
 
-    for(; i > j; j++){
+    for(; i > j; ++j){
       // iterate over retrieved elements
       var styles = !!elements[j].getAttribute('style') ? elements[j].getAttribute('style').split(':') : false,
           k = !!styles ? styles.length : 0,
@@ -107,17 +107,15 @@
           isImage = isImg(elements[j]),
           needsBgImage = (!styles || !isInArray(styles,k,'background-image')),
           type = isImage ? 'image' : (needsBgImage ? 'bg' : 'none');
-      console.log(shouldBeLoaded,isImage,needsBgImage,type);
+      
       if(!!shouldBeLoaded){
         switch(type){
           case 'image':
-            console.log('img',elements[j]);
             elements[j].src = elements[j].getAttribute('data-src');
             elements[j].removeAttribute('data-src');
             break;
 
           case 'bg':
-            console.log('bg',elements[j]);
             elements[j].style.backgroundImage = 'url('+elements[j].getAttribute('data-src')+')';
             elements[j].removeAttribute('data-src');
             break;
@@ -137,7 +135,7 @@
   var start = function(){
     // Setup event listeners, load anything in the viewport
       addEventHandler('load',toad);
-      addEventHandler('scroll',rebounceToad);
+      win.addEventListener('scroll',rebounceToad,false);
       addEventHandler('resize',rebounceToad);
   };
 
