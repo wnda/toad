@@ -1,6 +1,22 @@
-/* toad.js */
+/* toad.leaner.js */
+// this version supports nothing
+// it's designed to work with your polyfills rather than bringing its own
+// this will not work out of the box in anything less than IE9
 // pass in window, window.document
 ;(function(win,doc){
+  
+  if(!win.requestAnimationFrame){
+    win.requestAnimationFrame = (function(){
+      return win.webkitRequestAnimationFrame || win.mozRequestAnimationFrame || win.oRequestAnimationFrame || win.msRequestAnimationFrame || function(callback){return win.setTimeout(callback,1000/60)};
+    })();
+  }
+  
+  // same again please
+  if(!win.cancelAnimationFrame){
+    win.cancelAnimationFrame = (function(){
+      return win.webkitCancelRequestAnimationFrame || win.mozCancelAnimationFrame || win.oCancelAnimationFrame || win.msCancelAnimationFrame || function(id){return win.cancelTimeout(id)};
+    })();
+  }
   
   function isInArray(arr,i,item){
     while(i--) if(item === arr[i]) return true;
@@ -63,15 +79,15 @@
   }
   
   function start(){
-    win.addEventListener('load',prep,{passive:true});
-    win.addEventListener('scroll',toad,{passive:true});
-    win.addEventListener('resize',toad,{passive:true});
+    win.addEventListener('load',prep,false);
+    win.addEventListener('scroll',toad,false);
+    win.addEventListener('resize',toad,false);
   }
 
   function stop(){
-    win.removeEventListener('load',prep,{passive:true});
-    win.removeEventListener('scroll',toad,{passive:true});
-    win.removeEventListener('resize',toad,{passive:true});
+    win.removeEventListener('load',prep,false);
+    win.removeEventListener('scroll',toad,false);
+    win.removeEventListener('resize',toad,false);
   }
   
   win.toad = {
