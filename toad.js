@@ -89,14 +89,14 @@
   function prep(){
     // get everything with data-src attribute, prepare to iterate
     // getElementsByAttribute in case querySelectorAll is not supported
-    var elements = doc.querySelectorAll('[data-src]') || getElementsByAttribute('data-src'),
+    var elements = doc.querySelectorAll('[data-src]') || getElementsByAttribute('data-src') || [],
         i = elements.length, j = 0;
 
     for(; i > j; ++j){
       // iterate over retrieved elements
       var this_el = elements[j],
-          styles = !!this_el.getAttribute('style') ? this_el.getAttribute('style').split(':') : false,
-          k = !!styles ? styles.length : 0,
+          styles = !!this_el.getAttribute('style') ? this_el.getAttribute('style').split(':') : [],
+          k = styles.length,
           shouldBeLoaded = !!this_el.getAttribute('data-src') && isInViewport(this_el),
           isImage = 'img' === this_el.tagName.toLowerCase() && !this_el.src,
           needsBgImage = !styles || !isInArray(styles,k,'background-image'),
@@ -151,4 +151,5 @@
   win.toad = {
     startListening: start
   };
+  
 })(window,window.document);
