@@ -1,6 +1,7 @@
-/* toad.lean.js */
+/* toad.js */
+// pass in window, window.document
 ;(function(win,doc){
-    
+  
   function isInArray(arr,i,item){
     while(i--) if(item === arr[i]) return true;
     return false;
@@ -10,7 +11,7 @@
     var r = el.getBoundingClientRect(), wh = (win.innerHeight || doc.documentElement.clientHeight || doc.body.clientHeight);
     return r.top >= 0 && r.left >= 0 && r.top <= wh;
   }
-  
+
   function rebounce(f){
     var scheduled, context, args, len, i;
     return function(){
@@ -26,7 +27,7 @@
   }
   
   function prep(){
-    var elements = doc.querySelectorAll('[data-src]') || doc.getElementsByAttribute('data-src'),
+    var elements = doc.querySelectorAll('[data-src]') || [],
         i = elements.length, j = 0;
 
     for(; i > j; ++j){
@@ -37,7 +38,6 @@
           isImage = 'img' === this_el.tagName.toLowerCase() && !this_el.src,
           needsBgImage = !styles || !isInArray(styles,k,'background-image'),
           type = isImage ? 'image' : needsBgImage ? 'bg' : 'none';
-      
       if(shouldBeLoaded) load(this_el,type);
     }
     if(i <= 0) stop();
@@ -49,12 +49,10 @@
         el.src = el.getAttribute('data-src');
         el.removeAttribute('data-src');
         break;
-
       case 'bg':
         el.style.backgroundImage = 'url(' + el.getAttribute('data-src') + ')';
         el.removeAttribute('data-src');
         break;
-
       default:
         el.removeAttribute('data-src');
     }
@@ -65,15 +63,15 @@
   }
   
   function start(){
-    win.addEventListener('load',prep);
-    win.addEventListener('scroll',toad);
-    win.addEventListener('resize',toad);
+    win.addEventListener('load',prep,{passive:true});
+    win.addEventListener('scroll',toad,{passive:true});
+    win.addEventListener('resize',toad,{passive:true});
   }
 
   function stop(){
-    win.removeEventListener('load',prep);
-    win.removeEventListener('scroll',toad);
-    win.removeEventListener('resize',toad);
+    win.removeEventListener('load',prep,{passive:true});
+    win.removeEventListener('scroll',toad,{passive:true});
+    win.removeEventListener('resize',toad,{passive:true});
   }
   
   win.toad = {
