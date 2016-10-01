@@ -104,9 +104,15 @@
   function toad(){
     return rebounce(prep());
   }
+  
+  function start(){
+    addEventHandler('load',toad);
+    addEventHandler('scroll',toad);
+    addEventHandler('resize',toad);
+  }
 
-  addEventHandler('load',toad);
-  addEventHandler('scroll',toad);
-  addEventHandler('resize',toad);
+  window.toad = {
+    startListening: start
+  };
 
 })(window,window.document);
