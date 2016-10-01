@@ -119,11 +119,11 @@
         break;
 
       case 'bg':
-        el.style.backgroundImage = 'url('+el.getAttribute('data-src')+')';
+        el.style.backgroundImage = 'url(' + el.getAttribute('data-src') + ')';
         el.removeAttribute('data-src');
         break;
 
-      // we arrive here if the element has data-src, is in the viewport,
+      // we arrive here if the element has a data-src, is in the viewport,
       // isn't an image and doesn't need a background-image
       // unlikely but possible
       default:
@@ -136,14 +136,12 @@
   }
   
   function start(){
-    // Setup event listeners, load anything in the viewport
     addEventHandler('load',prep);
     addEventHandler('scroll',toad);
     addEventHandler('resize',toad);
   }
 
   function stop(){
-    // Stop listening for events to trigger loads
     removeEventHandler('load',prep);
     removeEventHandler('scroll',toad);
     removeEventHandler('resize',toad);
@@ -152,6 +150,7 @@
   /**
     PUBLIC METHODS
   **/
-  win.toad = { startListening: start };
-
+  win.toad = {
+    startListening: start
+  };
 })(window,window.document);
