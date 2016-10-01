@@ -4,10 +4,8 @@
   
   // first, for some extreme browser support
   if(!doc.querySelectorAll){
-    Document.prototype.getElementsByAttribute 
-    = Element.prototype.getElementsByAttribute 
-    = function(attr){
-      var nodeList = this.getElementsByTagName('*'),
+    var getElementsByAttribute = function(attr,context){
+      var nodeList = (context||doc).getElementsByTagName('*'),
           i = nodeList.length, j = 0, nodeArray = [];
       nodeArray.length = i;
       for(; i > j; j++) if(nodeList[j].getAttribute(attr)) nodeArray[j] = nodeList[j];
@@ -91,7 +89,7 @@
   function prep(){
     // get everything with data-src attribute, prepare to iterate
     // getElementsByAttribute in case querySelectorAll is not supported
-    var elements = doc.querySelectorAll('[data-src]') || doc.getElementsByAttribute('data-src'),
+    var elements = doc.querySelectorAll('[data-src]') || getElementsByAttribute('data-src'),
         i = elements.length, j = 0;
 
     for(; i > j; ++j){
