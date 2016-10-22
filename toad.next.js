@@ -15,7 +15,7 @@
       context = this; args = [];
       args.length = arguments.length;
       for(let i = 0; i < arguments.length; ++i) args[i] = arguments[i];
-      win.cancelAnimationFrame(scheduled);
+      !!scheduled && win.cancelAnimationFrame(scheduled);
       scheduled = win.requestAnimationFrame(function(){
         f.apply(context,args); scheduled = null;
       });
