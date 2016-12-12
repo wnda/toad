@@ -1,4 +1,4 @@
-;(function(win,doc){
+void function (win, doc) {
 
   'use strict';
   
@@ -67,7 +67,7 @@
     }
   }
 
-  function prep(){
+  function toad(){
     var elements = doc.querySelectorAll('[data-src]') || getElementsByAttribute('data-src') || [],
         len = elements.length,
         j = 0;
@@ -95,24 +95,20 @@
       }
     }
     if(elements.length <= 0){
-      removeEventHandler('load',toad);
-      removeEventHandler('scroll',toad);
-      removeEventHandler('resize',toad);
+      removeEventHandler('load', rebounce(toad));
+      removeEventHandler('scroll', rebounce(toad));
+      removeEventHandler('resize', rebounce(toad));
     }
-  }
-
-  function toad(){
-    return rebounce(prep());
   }
   
   function start(){
-    addEventHandler('load',toad);
-    addEventHandler('scroll',toad);
-    addEventHandler('resize',toad);
+    addEventHandler('load', rebounce(toad));
+    addEventHandler('scroll', rebounce(toad));
+    addEventHandler('resize', rebounce(toad));
   }
 
-  window.toad = {
+  win.toad = {
     startListening: start
   };
 
-})(window,window.document);
+}(window, window.document);
