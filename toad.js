@@ -3,18 +3,22 @@ void function (win, doc) {
   'use strict';
   
   // first, for some extreme browser support
-  if(!doc.querySelectorAll){
-    var getElementsByAttribute = function(attr,context){
-      var nodeList = (context||doc).getElementsByTagName('*'),
+  if (!doc.querySelectorAll) {
+    var getElementsByAttribute = function (attr,context) {
+      var nodeList = (context || doc).getElementsByTagName('*'),
           i = nodeList.length, j = 0, nodeArray = [];
       nodeArray.length = i;
-      for(; i > j; j++) if(nodeList[j].getAttribute(attr)) nodeArray[j] = nodeList[j];
+      for (; i > j; j++) {
+        if (nodeList[j].getAttribute(attr)) {
+          nodeArray[j] = nodeList[j];
+        }
+      }
       return nodeArray;
     };
   }
   
-  if(!win.requestAnimationFrame){
-    win.requestAnimationFrame = (function(){
+  if (!win.requestAnimationFrame) {
+    win.requestAnimationFrame = (function () {
       return win.webkitRequestAnimationFrame
           || win.mozRequestAnimationFrame
           || win.oRequestAnimationFrame
@@ -23,8 +27,8 @@ void function (win, doc) {
     })();
   }
   
-  if(!win.cancelAnimationFrame){
-    win.cancelAnimationFrame = (function(){
+  if (!win.cancelAnimationFrame) {
+    win.cancelAnimationFrame = (function () {
       return win.webkitCancelRequestAnimationFrame
           || win.mozCancelAnimationFrame
           || win.oCancelAnimationFrame
@@ -33,51 +37,53 @@ void function (win, doc) {
     })();
   }
   
-  function addEventHandler(ev,h){
+  function addEventHandler (ev, h) {
     win.addEventListener ?
-      win.addEventListener(ev,h,!1) : 
+      win.addEventListener(ev, h, !1) : 
         win.attachEvent ? 
-          win.attachEvent('on'+ev,h) : 
+          win.attachEvent('on'+ev, h) : 
             win['on'+ev] = h;
   }
   
-  function removeEventHandler(ev,h){
+  function removeEventHandler (ev, h) {
     win.removeEventListener ?
-      win.removeEventListener(ev,h,!1) : 
+      win.removeEventListener(ev, h, !1) : 
         win.detachEvent ? 
-          win.detachEvent('on'+ev,h) : 
+          win.detachEvent('on'+ev, h) : 
             win['on'+ev] = null;
   }
 
-  function isInViewport(el){
+  function isInViewport (el) {
     var r = el.getBoundingClientRect();
     return r.top >= 0 && r.left >= 0 && r.top <= win.innerHeight;
   }
 
-  function rebounce(f){
+  function rebounce (f) {
     var scheduled, context, args, len, i;
     return function(){
       context = this; args = [];
       len = args.length = arguments.length; i = 0;
-      for(;i < len; ++i) args[i] = arguments[i];
-      win.cancelAnimationFrame(scheduled);
-      scheduled = win.requestAnimationFrame(function(){
-        f.apply(context,args); scheduled = null;
+      for(;i < len; ++i) {
+        args[i] = arguments[i];
+      }
+      !!scheduled && win.cancelAnimationFrame(scheduled);
+      scheduled = win.requestAnimationFrame(function () {
+        f.apply(context, args); scheduled = null;
       });
     }
   }
 
-  function toad(){
+  function toad () {
     var elements = doc.querySelectorAll('[data-src]') || getElementsByAttribute('data-src') || [],
         len = elements.length,
         j = 0;
 
-    for(; j < len; ++j){
+    for (; j < len; ++j) {
       var this_el = elements[j],
           should_load = !!this_el.getAttribute('data-src') && isInViewport(this_el),
           type = 'img' === this_el.tagName.toLowerCase() ? 'image' : 'bg';
 
-      switch(should_load){
+      switch (should_load) {
         case true:
           switch(type){
             case 'image':
@@ -94,14 +100,14 @@ void function (win, doc) {
           break;
       }
     }
-    if(elements.length <= 0){
+    if (elements.length <= 0) {
       removeEventHandler('load', rebounce(toad));
       removeEventHandler('scroll', rebounce(toad));
       removeEventHandler('resize', rebounce(toad));
     }
   }
   
-  function start(){
+  function start () {
     addEventHandler('load', rebounce(toad));
     addEventHandler('scroll', rebounce(toad));
     addEventHandler('resize', rebounce(toad));
