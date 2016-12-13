@@ -2,21 +2,6 @@ void function (win, doc) {
 
   'use strict';
   
-  // first, for some extreme browser support
-  if (!doc.querySelectorAll) {
-    var getElementsByAttribute = function (attr,context) {
-      var nodeList = (context || doc).getElementsByTagName('*'),
-          i = nodeList.length, j = 0, nodeArray = [];
-      nodeArray.length = i;
-      for (; i > j; j++) {
-        if (nodeList[j].getAttribute(attr)) {
-          nodeArray[j] = nodeList[j];
-        }
-      }
-      return nodeArray;
-    };
-  }
-  
   if (!win.requestAnimationFrame) {
     win.requestAnimationFrame = (function () {
       return win.webkitRequestAnimationFrame
@@ -77,7 +62,7 @@ void function (win, doc) {
   }
 
   function toad () {
-    var elements = doc.querySelectorAll('[data-src]') || getElementsByAttribute('data-src') || [],
+    var elements = doc.querySelectorAll('[data-src]') || [],
         len = elements.length,
         j = 0;
 
