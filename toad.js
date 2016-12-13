@@ -41,16 +41,16 @@ void function (win, doc) {
     win.addEventListener ?
       win.addEventListener(ev, h, !1) : 
         win.attachEvent ? 
-          win.attachEvent('on'+ev, h) : 
-            win['on'+ev] = h;
+          win.attachEvent('on' + ev, h) : 
+            win['on' + ev] = h;
   }
   
   function removeEventHandler (ev, h) {
     win.removeEventListener ?
       win.removeEventListener(ev, h, !1) : 
         win.detachEvent ? 
-          win.detachEvent('on'+ev, h) : 
-            win['on'+ev] = null;
+          win.detachEvent('on' + ev, h) : 
+            win['on' + ev] = null;
   }
 
   function isInViewport (el) {
@@ -60,13 +60,16 @@ void function (win, doc) {
 
   function rebounce (f) {
     var scheduled, context, args, len, i;
-    return function(){
-      context = this; args = [];
+    return function () {
+      context = this; 
+      args = [];
       len = args.length = arguments.length; i = 0;
       for(;i < len; ++i) {
         args[i] = arguments[i];
       }
-      !!scheduled && win.cancelAnimationFrame(scheduled);
+      if (!!scheduled) {
+        win.cancelAnimationFrame(scheduled);
+      }
       scheduled = win.requestAnimationFrame(function () {
         f.apply(context, args); scheduled = null;
       });
@@ -117,4 +120,4 @@ void function (win, doc) {
     startListening: start
   };
 
-}(window, window.document);
+} (window, window.document);
