@@ -1,8 +1,12 @@
-// this will not work in most browsers
-// due to use of passive event listeners & let
+// This will not work in most browsers
+// due to use of passive event listeners, arrow functions, and variable assignment with let
 ;((win, doc) => {
 
   'use strict';
+  
+  win.addEventListener('load', toad, { passive: true, capture: false, once: true });
+  win.addEventListener('scroll', rebounce(toad), { passive: true, capture: false, once: false });
+  win.addEventListener('resize', rebounce(toad), { passive: true, capture: false, once: false });
 
   function isInViewport (el) {
     let r = el.getBoundingClientRect();
@@ -46,20 +50,19 @@
       }
       
       if (!!this_el.getAttribute('data-src') && isInViewport(this_el)) {
+        
         if ('img' === this_el.tagName.toLowerCase()) {
             this_el.src = this_el.getAttribute('data-src');
             this_el.removeAttribute('data-src');
+          
         } else {
           this_el.style.backgroundImage = 'url(' + this_el.getAttribute('data-src') + ')';
           this_el.removeAttribute('data-src');
-        }                  
+        }
+        
       }
       
     }
   }
-
-  win.addEventListener('load', toad, { passive: true, capture: false, once: true });
-  win.addEventListener('scroll', rebounce(toad), { passive: true, capture: false, once: false });
-  win.addEventListener('resize', rebounce(toad), { passive: true, capture: false, once: false });
 
 })(window, window.document);
