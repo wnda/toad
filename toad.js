@@ -8,7 +8,7 @@
           || win.mozRequestAnimationFrame
           || win.oRequestAnimationFrame
           || win.msRequestAnimationFrame
-          || function(callback){return win.setTimeout(callback,1000/60)};
+          || function (callback) { return win.setTimeout(callback, 1000/60) };
     })();
   }
   
@@ -18,7 +18,7 @@
           || win.mozCancelAnimationFrame
           || win.oCancelAnimationFrame
           || win.msCancelAnimationFrame
-          || function(id){return win.cancelTimeout(id)};
+          || function (id){ return win.cancelTimeout(id) };
     })();
   }
   
@@ -48,15 +48,20 @@
     return function () {
       context = this; 
       args = [];
-      len = args.length = arguments.length; i = 0;
+      len = arguments.length; 
+      i = 0;
+      
       for(;i < len; ++i) {
         args[i] = arguments[i];
       }
+      
       if (!!scheduled) {
         win.cancelAnimationFrame(scheduled);
       }
+      
       scheduled = win.requestAnimationFrame(function () {
-        f.apply(context, args); scheduled = null;
+        f.apply(context, args); 
+        scheduled = null;
       });
     }
   }
@@ -67,31 +72,22 @@
         j = 0;
 
     for (; j < len; ++j) {
-      var this_el = elements[j],
-          should_load = !!this_el.getAttribute('data-src') && isInViewport(this_el),
-          type = 'img' === this_el.tagName.toLowerCase() ? 'image' : 'bg';
-
-      switch (should_load) {
-        case true:
-          switch(type){
-            case 'image':
-              this_el.src = this_el.getAttribute('data-src');
-              this_el.removeAttribute('data-src');
-              break;
-            case 'bg':
-              this_el.style.backgroundImage = 'url(' + this_el.getAttribute('data-src') + ')';
-              this_el.removeAttribute('data-src');
-              break;
-            default:
-              this_el.removeAttribute('data-src');
-          }
-          break;
+      var this_el = elements[j];
+      if (!this_el.getAttribute('data-src') || !isInViewport(this_el)) {
+        return;
       }
-    }
-    if (elements.length <= 0) {
-      removeEventHandler('load', rebounce(toad));
-      removeEventHandler('scroll', rebounce(toad));
-      removeEventHandler('resize', rebounce(toad));
+      
+      if (!!this_el.getAttribute('data-src') && isInViewport(this_el)) {
+        
+        if ('img' === this_el.tagName.toLowerCase()) {
+          this_el.src = this_el.getAttribute('data-src');
+          this_el.removeAttribute('data-src');
+          
+        } else {
+          this_el.style.backgroundImage = 'url(' + this_el.getAttribute('data-src') + ')';
+          this_el.removeAttribute('data-src');
+        }
+      }
     }
   }
   
