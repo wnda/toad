@@ -2,7 +2,7 @@
 
   'use strict';
   
-  if (!win.requestAnimationFrame) {
+  if (!('requestAnimationFrame' in win)) {
     win.requestAnimationFrame = (function () {
       return win.webkitRequestAnimationFrame
           || win.mozRequestAnimationFrame
@@ -12,7 +12,7 @@
     })();
   }
   
-  if (!win.cancelAnimationFrame) {
+  if (!('cancelAnimationFrame' in win)) {
     win.cancelAnimationFrame = (function () {
       return win.webkitCancelAnimationFrame
           || win.mozCancelAnimationFrame
@@ -48,7 +48,11 @@
   }
 
   function rebounce (f) {
-    var scheduled, context, args, len, i;
+    var scheduled;
+    var context; 
+    var args;
+    var len;
+    var i;
     return function () {
       context = this; 
       args = [];
@@ -74,9 +78,10 @@
     var elements = doc.querySelectorAll('[data-src]') || [];
     var len = elements.length;
     var j = 0;
+    var this_el;
 
     for (; j < len; ++j) {
-      var this_el = elements[j];
+      this_el = elements[j];
       
       if (!this_el.getAttribute('data-src') || !isInViewport(this_el)) {
         return;
