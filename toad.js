@@ -22,6 +22,10 @@
     })();
   }
   
+  win.toad = {
+    startListening: start
+  };
+  
   function addEventHandler (ev, h) {
     win.addEventListener ?
       win.addEventListener(ev, h, !1) : 
@@ -67,18 +71,18 @@
   }
 
   function toad () {
-    var elements = doc.querySelectorAll('[data-src]') || [],
-        len = elements.length,
-        j = 0;
+    var elements = doc.querySelectorAll('[data-src]') || [];
+    var len = elements.length;
+    var j = 0;
 
     for (; j < len; ++j) {
       var this_el = elements[j];
+      
       if (!this_el.getAttribute('data-src') || !isInViewport(this_el)) {
         return;
       }
       
       if (!!this_el.getAttribute('data-src') && isInViewport(this_el)) {
-        
         if ('img' === this_el.tagName.toLowerCase()) {
           this_el.src = this_el.getAttribute('data-src');
           this_el.removeAttribute('data-src');
@@ -86,7 +90,7 @@
         } else {
           this_el.style.backgroundImage = 'url(' + this_el.getAttribute('data-src') + ')';
           this_el.removeAttribute('data-src');
-        }
+        } 
       }
     }
   }
@@ -96,9 +100,5 @@
     addEventHandler('scroll', rebounce(toad));
     addEventHandler('resize', rebounce(toad));
   }
-
-  win.toad = {
-    startListening: start
-  };
 
 })(window, window.document);
