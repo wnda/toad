@@ -52,8 +52,8 @@
       if (!!this_el.getAttribute('data-src') && isInViewport(this_el)) {
         
         if ('img' === this_el.tagName.toLowerCase()) {
-            this_el.src = this_el.getAttribute('data-src');
-            this_el.removeAttribute('data-src');
+          this_el.src = this_el.getAttribute('data-src');
+          this_el.removeAttribute('data-src');
           
         } else {
           this_el.style.backgroundImage = 'url(' + this_el.getAttribute('data-src') + ')';
