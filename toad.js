@@ -1,4 +1,4 @@
-void function (win, doc) {
+;(function (win, doc) {
 
   'use strict';
   
@@ -105,4 +105,4 @@ void function (win, doc) {
     startListening: start
   };
 
-} (window, window.document);
+})(window, window.document);
