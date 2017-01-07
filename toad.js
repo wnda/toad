@@ -16,7 +16,7 @@
           || win.mozCancelAnimationFrame
           || win.oCancelAnimationFrame
           || win.msCancelAnimationFrame
-          || function (id){ return win.cancelTimeout(id) };
+          || function (id) { return win.cancelTimeout(id) };
     })();
   }
   
