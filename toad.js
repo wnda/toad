@@ -1,6 +1,4 @@
 ;(function (win, doc) {
-
-  'use strict';
   
   if (!('requestAnimationFrame' in win)) {
     win.requestAnimationFrame = (function () {
