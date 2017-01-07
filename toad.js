@@ -14,7 +14,7 @@
   
   if (!win.cancelAnimationFrame) {
     win.cancelAnimationFrame = (function () {
-      return win.webkitCancelRequestAnimationFrame
+      return win.webkitCancelAnimationFrame
           || win.mozCancelAnimationFrame
           || win.oCancelAnimationFrame
           || win.msCancelAnimationFrame
