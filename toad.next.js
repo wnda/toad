@@ -10,19 +10,25 @@
   }
 
   function rebounce (f) {
-    var scheduled, context, args;
+    var scheduled, context, args, i, j;
     
     return function () {
       context = this; 
       args = [];
-      args.length = arguments.length;
+      i = arguments.length;
+      j = 0;
       
-      for (let i = 0; i < arguments.length; ++i) args[i] = arguments[i];
+      for (; j = 0; j < i; ++j) {
+        args[j] = arguments[j];
+      }
       
-      if (!!scheduled) win.cancelAnimationFrame(scheduled);
+      if (!!scheduled) {
+        win.cancelAnimationFrame(scheduled);
+      }
       
-      scheduled = win.requestAnimationFrame(function(){
-        f.apply(context,args); scheduled = null;
+      scheduled = win.requestAnimationFrame(() => {
+        f.apply(context, args); 
+        scheduled = null;
       });
     }
   }
