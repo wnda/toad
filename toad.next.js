@@ -35,11 +35,13 @@
 
   function toad () {
     let elements = doc.querySelectorAll('[data-src]') || [];
-
-    for (let j = 0; j < elements.length; ++j) {
-      let this_el = elements[j],
-          should_load = !!this_el.getAttribute('data-src') && isInViewport(this_el),
-          type = 'img' === this_el.tagName.toLowerCase() ? 'image' : 'bg';
+    let i = elements.length;
+    let j = 0;
+    
+    for (;j < i; ++j) {
+      let this_el = elements[j];
+      let should_load = !!this_el.getAttribute('data-src') && isInViewport(this_el);
+      let type = 'img' === this_el.tagName.toLowerCase() ? 'image' : 'bg';
 
       switch (should_load) {
         case true:
