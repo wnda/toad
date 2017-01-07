@@ -40,27 +40,21 @@
     
     for (;j < i; ++j) {
       let this_el = elements[j];
-      let should_load = !!this_el.getAttribute('data-src') && isInViewport(this_el);
-      let type = 'img' === this_el.tagName.toLowerCase() ? 'image' : 'bg';
 
-      switch (should_load) {
-        case true:
-          switch (type) {
-            case 'image':
-              this_el.src = this_el.getAttribute('data-src');
-              this_el.removeAttribute('data-src');
-              break;
-              
-            case 'bg':
-              this_el.style.backgroundImage = 'url(' + this_el.getAttribute('data-src') + ')';
-              this_el.removeAttribute('data-src');
-              break;
-              
-            default:
-              this_el.removeAttribute('data-src');
-          }
-          break;
+      if (!this_el.getAttribute('data-src') || !isInViewport(this_el)) {
+        return;
       }
+      
+      if (!!this_el.getAttribute('data-src') && isInViewport(this_el)) {
+        if ('img' === this_el.tagName.toLowerCase()) {
+            this_el.src = this_el.getAttribute('data-src');
+            this_el.removeAttribute('data-src');
+        } else {
+          this_el.style.backgroundImage = 'url(' + this_el.getAttribute('data-src') + ')';
+          this_el.removeAttribute('data-src');
+        }                  
+      }
+      
     }
   }
 
