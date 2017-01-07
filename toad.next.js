@@ -33,7 +33,7 @@
     }
   }
 
-  function prep () {
+  function toad () {
     let elements = doc.querySelectorAll('[data-src]') || [];
 
     for (let j = 0; j < elements.length; ++j) {
@@ -60,17 +60,10 @@
           break;
       }
     }
-    if (elements.length <= 0) {
-      win.removeEventListener('load', toad, { passive: true });
-      win.removeEventListener('scroll', toad, { passive: true});
-    }
   }
 
-  function toad () {
-    return rebounce( prep() );
-  }
-
-  win.addEventListener('load', toad, { passive: true });
-  win.addEventListener('scroll', toad, { passive: true });
+  win.addEventListener('load', toad, { passive: true, capture: false, once: true });
+  win.addEventListener('scroll', rebounce(toad), { passive: true, capture: false, once: false });
+  win.addEventListener('resize', rebounce(toad), { passive: true, capture: false, once: false });
 
 })(window, window.document);
