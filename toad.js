@@ -40,8 +40,7 @@
             win['on' + ev] = null;
   }
 
-  function isInViewport (el) {
-    var r = el.getBoundingClientRect();
+  function isInViewport (r) {
     return r.top >= 0 && r.left >= 0 && r.top <= win.innerHeight;
   }
 
@@ -81,11 +80,11 @@
     for (; j < len; ++j) {
       this_el = elements[j];
       
-      if (!this_el.getAttribute('data-src') || !isInViewport(this_el)) {
+      if (!this_el.getAttribute('data-src') || !isInViewport(this_el.getBoundingClientRect())) {
         return;
       }
       
-      if (!!this_el.getAttribute('data-src') && isInViewport(this_el)) {
+      if (!!this_el.getAttribute('data-src') && isInViewport(this_el.getBoundingClientRect())) {
         if ('img' === this_el.tagName.toLowerCase()) {
           this_el.src = this_el.getAttribute('data-src');
           this_el.removeAttribute('data-src');
