@@ -57,7 +57,7 @@
       len = arguments.length; 
       i = 0;
       
-      for(;i < len; ++i) {
+      for (;i < len; ++i) {
         args[i] = arguments[i];
       }
       
