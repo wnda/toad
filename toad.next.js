@@ -8,8 +8,7 @@
   win.addEventListener('scroll', rebounce(toad), { passive: true, capture: false, once: false });
   win.addEventListener('resize', rebounce(toad), { passive: true, capture: false, once: false });
 
-  function isInViewport (el) {
-    let r = el.getBoundingClientRect();
+  function isInViewport (r) {
     return r.top >= 0 && r.left >= 0 && r.top <= win.innerHeight;
   }
 
@@ -45,11 +44,11 @@
     for (;j < i; ++j) {
       let this_el = elements[j];
 
-      if (!this_el.getAttribute('data-src') || !isInViewport(this_el)) {
+      if (!this_el.getAttribute('data-src') || !isInViewport(this_el.getBoundingClientRect())) {
         return;
       }
       
-      if (!!this_el.getAttribute('data-src') && isInViewport(this_el)) {
+      if (!!this_el.getAttribute('data-src') && isInViewport(this_el.getBoundingClientRect())) {
         
         if ('img' === this_el.tagName.toLowerCase()) {
           this_el.src = this_el.getAttribute('data-src');
